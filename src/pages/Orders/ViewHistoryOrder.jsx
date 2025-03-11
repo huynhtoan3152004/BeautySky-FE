@@ -58,12 +58,12 @@ const OrderHistory = () => {
 
   return (
     <>
-      <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-xl p-8 md:p-6 sm:p-4">
-        <h1 className="text-3xl font-bold text-gray-800 text-center mb-6 sm:text-2xl">
+      <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-xl p-8">
+        <h1 className="text-3xl font-bold text-gray-800 text-center mb-6">
           🛒 Lịch sử đơn hàng
         </h1>
 
-        <div className="flex flex-wrap justify-center gap-4 mb-6 sm:gap-2">
+        <div className="flex justify-center gap-4 mb-6">
           {["Đã giao hàng", "Đang giao hàng", "Đã hủy"].map((tab) => (
             <button
               key={tab}
@@ -71,7 +71,7 @@ const OrderHistory = () => {
                 setSelectedTab(tab);
                 setCurrentPage(1);
               }}
-              className={`px-4 py-2 rounded-lg font-medium transition sm:px-3 sm:py-1.5 sm:text-sm ${
+              className={`px-4 py-2 rounded-lg font-medium transition ${
                 selectedTab === tab
                   ? "bg-blue-500 text-white"
                   : "bg-gray-200 text-gray-700"
@@ -82,43 +82,7 @@ const OrderHistory = () => {
           ))}
         </div>
 
-        {/* Mobile/Tablet Card View */}
-        <div className="md:hidden">
-          {paginatedOrders.map((order, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
-              className="mb-4 p-4 border rounded-lg shadow-sm"
-            >
-              <div className="flex justify-between items-center mb-2">
-                <span className="font-semibold">{order.orderId}</span>
-                <span className="text-sm">{order.date}</span>
-              </div>
-              <div className="space-y-2">
-                <p className="text-sm"><span className="font-medium">Sản phẩm:</span> {order.items.join(", ")}</p>
-                <p className="flex items-center text-sm">
-                  <CreditCardIcon className="w-4 h-4 text-indigo-500 mr-2" />
-                  <span className="font-medium">Thanh toán:</span> {order.payment}
-                </p>
-                <p className="text-sm"><span className="font-medium">Mã vận chuyển:</span> {order.trackingId}</p>
-                <div className="flex justify-between items-center mt-3">
-                  <span className="font-semibold">{formatCurrency(order.total)}</span>
-                  <button
-                    onClick={() => navigate(`/orderdetail/${order.orderId.replace("#", "")}`)}
-                    className="px-3 py-1.5 bg-blue-500 text-white text-sm rounded-lg shadow hover:bg-blue-600 transition flex items-center"
-                  >
-                    <EyeIcon className="w-4 h-4 mr-1" /> Xem
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Desktop Table View */}
-        <div className="hidden md:block overflow-x-auto">
+        <div className="overflow-x-auto">
           <table className="w-full border-collapse border border-gray-300 rounded-lg overflow-hidden">
             <thead>
               <tr className="bg-blue-500 text-white">
@@ -171,12 +135,12 @@ const OrderHistory = () => {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex justify-center mt-6 gap-2 flex-wrap">
+          <div className="flex justify-center mt-6 gap-2">
             {[...Array(totalPages)].map((_, i) => (
               <button
                 key={i}
                 onClick={() => setCurrentPage(i + 1)}
-                className={`px-3 py-1 rounded-lg sm:px-2 sm:py-0.5 sm:text-sm ${
+                className={`px-3 py-1 rounded-lg ${
                   currentPage === i + 1
                     ? "bg-blue-500 text-white"
                     : "bg-gray-200 text-gray-700"

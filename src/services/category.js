@@ -1,7 +1,7 @@
 import axiosInstance from "../config/axios/axiosInstance";
 
 const endPoint = "/Categories";
-const categoryAPI = {
+const categoryApi = {
   getAll: async () => {
     const response = await axiosInstance.get(endPoint);
     return response;
@@ -17,10 +17,10 @@ const categoryAPI = {
     const response = await axiosInstance.put(`${endPoint}/${id}`, payload);
     return response;
   },
-  searchCategory: async (keyword) => {
-    const response = await axiosInstance.get(`${endPoint}/search?keyword=${keyword}`);
-    return response.data.map(item => ({...item, type: 'categories'}));
+  searchCategory: async (id) => {
+    const response = await axiosInstance.get(`${endPoint}/${id}`);
+    return response;
   },
 };
 
-export default categoryAPI;
+export default categoryApi;

@@ -144,9 +144,9 @@ const Dashboard = () => {
 
   return (
     <div className="flex h-screen bg-gray-100">
-      <div className="flex-1 flex flex-col p-4 md:p-6 space-y-4 md:space-y-6 overflow-y-auto">
+      <div className="flex-1 flex flex-col p-6 space-y-6">
         {/* Statistics Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
           <StatCard
             icon={<FaUsers />}
             title="Users"
@@ -156,7 +156,7 @@ const Dashboard = () => {
           <StatCard
             icon={<FaShoppingCart />}
             title="Orders"
-            value={orders ? orders.length : 0}
+            value={orders ? orders.length : 0} // Đảm bảo không lỗi nếu orders chưa có dữ liệu
             subtitle="Fetched from API"
           />
           <StatCard
@@ -177,17 +177,13 @@ const Dashboard = () => {
         </div>
 
         {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-          <div className="w-full min-h-[300px] md:min-h-[400px]">
-            <SalesChart salesData={salesData} leadData={leadData} />
-          </div>
-          <div className="w-full min-h-[300px] md:min-h-[400px]">
-            <RevenueChart revenueGrowth={revenueGrowth} />
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <SalesChart salesData={salesData} leadData={leadData} />
+          <RevenueChart revenueGrowth={revenueGrowth} />
         </div>
 
         {/* Additional Insights */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <StatCard
             icon={<FaChartLine />}
             title="Conversion Rate"
@@ -200,9 +196,7 @@ const Dashboard = () => {
             value="22.5%"
             subtitle="Stable trend"
           />
-          <div className="col-span-1 sm:col-span-2 md:col-span-1">
-            <CustomersChart customerGrowth={customerGrowth} />
-          </div>
+          <CustomersChart customerGrowth={customerGrowth} />
         </div>
       </div>
     </div>

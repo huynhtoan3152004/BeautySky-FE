@@ -36,60 +36,25 @@ const SalesChart = ({ salesData, leadData }) => {
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false,
     plugins: {
       legend: {
         display: true,
         position: "top",
-        labels: {
-          font: {
-            size: function(context) {
-              let width = context.chart.width;
-              if (width < 768) return 10;
-              if (width < 1024) return 12;
-              return 14;
-            }
-          }
-        }
       },
     },
     scales: {
       y: {
         beginAtZero: true,
-        ticks: {
-          font: {
-            size: function(context) {
-              let width = context.chart.width;
-              if (width < 768) return 10;
-              if (width < 1024) return 12;
-              return 14;
-            }
-          }
-        }
       },
-      x: {
-        ticks: {
-          font: {
-            size: function(context) {
-              let width = context.chart.width;
-              if (width < 768) return 10;
-              if (width < 1024) return 12;
-              return 14;
-            }
-          }
-        }
-      }
     },
   };
 
   return (
-    <div className="bg-white p-4 md:p-6 rounded-2xl shadow-lg hover:scale-105 transition">
-      <h3 className="text-base md:text-lg font-semibold mb-2 md:mb-4 text-gray-800">
+    <div className="bg-white p-6 rounded-2xl shadow-lg hover:scale-105 transition">
+      <h3 className="text-lg font-semibold mb-4 text-gray-800">
         Sales & Leads Overview
       </h3>
-      <div className="h-[300px] md:h-[400px] lg:h-[450px]">
-        <Line data={data} options={options} />
-      </div>
+      <Line data={data} options={options} />
     </div>
   );
 };

@@ -11,7 +11,6 @@ import usersAPI from "../../../services/users";
 import Swal from "sweetalert2";
 import { useOrdersContext } from "../../../context/OrdersContext";
 import { Plus } from "lucide-react";
-import orderAPI from "../../../services/order";
 
 const Customers = () => {
   const { users, fetchUsers } = useUsersContext();
@@ -266,9 +265,8 @@ const Customers = () => {
     if (!orders || !Array.isArray(orders)) {
       return 0;
     }
-    return orders.filter(
-      (order) => order.userId === customerId && order.status > 0
-    ).length;
+
+    return orders.filter((order) => order.customerId === customerId).length;
   };
 
   const handleAddUser = async () => {
@@ -300,139 +298,238 @@ const Customers = () => {
   };
 
   return (
-    <div className="p-2 sm:p-4 md:p-6 bg-gray-100 min-h-screen">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-center justify-between mb-4 gap-3">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Khách hàng</h1>
+    <div className="p-6 bg-gray-100 min-h-screen">
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-3xl font-bold text-gray-900">Khách hàng</h1>
         <button
-          className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-blue-500 text-white text-lg font-semibold rounded-lg hover:bg-blue-600"
+          className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white text-lg font-semibold rounded-lg hover:bg-blue-600"
           onClick={() => setShowAddUserModal(true)}
         >
           {editingUser ? <FaEdit size={20} /> : <Plus size={20} />}
           {editingUser ? "Chỉnh sửa thành viên" : "Thêm thành viên"}
         </button>
       </div>
-
-      <div className="bg-white p-2 sm:p-4 rounded-lg shadow">
-        {/* Search và Filter */}
-        <div className="flex flex-col gap-4 mb-4">
+      <div className="bg-white p-4 rounded-lg shadow">
+        {/* Search Bar + Date Filters */}
+        <div className="flex flex-wrap justify-between items-center mb-4 gap-4">
           {/* Search Name */}
-          <div className="relative w-full">
+          <div className="relative">
             <FaSearch className="absolute left-3 top-2.5 text-gray-500" />
             <input
               type="text"
               placeholder="Tìm khách hàng..."
-              className="w-full pl-10 pr-4 py-2 border rounded-md"
+              className="pl-10 pr-4 py-2 border rounded-md w-80"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
 
           {/* Date Filters */}
-          <div className="flex flex-col sm:flex-row gap-3 w-full">
-            <div className="relative w-full">
+          <div className="flex gap-3">
+            <div className="relative">
               <FaCalendarAlt className="absolute left-3 top-2.5 text-gray-500" />
               <input
                 type="date"
-                className="w-full pl-10 pr-4 py-2 border rounded-md"
+                className="pl-10 pr-4 py-2 border rounded-md"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
               />
             </div>
-            <div className="relative w-full">
+            <div className="relative">
               <FaCalendarAlt className="absolute left-3 top-2.5 text-gray-500" />
               <input
                 type="date"
-                className="w-full pl-10 pr-4 py-2 border rounded-md"
+                className="pl-10 pr-4 py-2 border rounded-md"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
               />
             </div>
           </div>
         </div>
-
-        {/* Table Container */}
-        {filteredCustomers.length > 0 ? (
-          <div className="overflow-x-auto -mx-2 sm:mx-0">
-            <div className="inline-block min-w-full align-middle">
-              <div className="overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-200">
-                    <tr>
-                      <th scope="col" className="p-2 sm:p-3 text-left text-xs sm:text-sm">Tên</th>
-                      <th scope="col" className="p-2 sm:p-3 text-left text-xs sm:text-sm hidden sm:table-cell">Email</th>
-                      <th scope="col" className="p-2 sm:p-3 text-left text-xs sm:text-sm">Role</th>
-                      <th scope="col" className="p-2 sm:p-3 text-left text-xs sm:text-sm hidden md:table-cell">Orders</th>
-                      <th scope="col" className="p-2 sm:p-3 text-left text-xs sm:text-sm hidden sm:table-cell">Trạng thái</th>
-                      <th scope="col" className="p-2 sm:p-3 text-left text-xs sm:text-sm hidden md:table-cell">Ngày Tạo</th>
-                      <th scope="col" className="p-2 sm:p-3 text-left text-xs sm:text-sm">Hành động</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {currentCustomers.map((customer) => (
-                      <tr key={customer.id}>
-                        <td className="p-2 sm:p-3 whitespace-nowrap">
-                          <div className="flex items-center gap-2">
-                            <FaUser className="text-blue-500" />
-                            <span className="text-xs sm:text-sm">{customer.fullName}</span>
-                          </div>
-                        </td>
-                        <td className="p-2 sm:p-3 whitespace-nowrap hidden sm:table-cell">
-                          <span className="text-xs sm:text-sm">{customer.email}</span>
-                        </td>
-                        <td className="p-2 sm:p-3 whitespace-nowrap">
-                          <span className={`px-2 py-1 rounded-full text-white text-xs ${getRoleName(customer.roleId).color}`}>
-                            {getRoleName(customer.roleId).name}
-                          </span>
-                        </td>
-                        <td className="p-2 sm:p-3 whitespace-nowrap hidden md:table-cell">
-                          <span className="text-xs sm:text-sm">{getOrderCount(customer.userId)}</span>
-                        </td>
-                        <td className="p-2 sm:p-3 whitespace-nowrap hidden sm:table-cell">
-                          <span className={`px-2 py-1 rounded-full text-white text-xs ${customer.isActive ? "bg-green-500" : "bg-red-500"}`}>
-                            {customer.isActive ? "Active" : "Inactive"}
-                          </span>
-                        </td>
-                        <td className="p-2 sm:p-3 whitespace-nowrap hidden md:table-cell">
-                          <span className="text-xs sm:text-sm">{formatDate(customer.dateCreate)}</span>
-                        </td>
-                        <td className="p-2 sm:p-3 whitespace-nowrap">
-                          <div className="flex gap-2">
-                            <button className="text-blue-500" onClick={() => handleEditUser(customer)}>
-                              <FaEdit />
-                            </button>
-                            <button className="text-red-500" onClick={() => handleDeleteUser(customer.userId || customer.id)}>
-                              <FaTrash />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+        {/* Modal thêm thành viên */}
+        {showAddUserModal && (
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+              <h2 className="text-2xl font-bold mb-4">
+                {editingUser ? "Cập nhật thành viên" : "Thêm thành viên"}
+              </h2>
+              <input
+                type="text"
+                placeholder="Tên tài khoản"
+                className="w-full p-2 border rounded mb-2"
+                value={newUser.userName}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, userName: e.target.value })
+                }
+              />
+              <input
+                type="text"
+                placeholder="Họ và tên"
+                className="w-full p-2 border rounded mb-2"
+                value={newUser.fullName}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, fullName: e.target.value })
+                }
+              />
+              <input
+                type="email"
+                placeholder="Email"
+                className="w-full p-2 border rounded mb-2"
+                value={newUser.email}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, email: e.target.value })
+                }
+              />
+              <input
+                type="password"
+                placeholder="Mật khẩu"
+                className="w-full p-2 border rounded mb-2"
+                value={newUser.password}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, password: e.target.value })
+                }
+              />
+              <input
+                type="password"
+                placeholder="Xác nhận mật khẩu"
+                className="w-full p-2 border rounded mb-2"
+                value={newUser.confirmPassword}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, confirmPassword: e.target.value })
+                }
+              />
+              <input
+                type="text"
+                placeholder="Số điện thoại"
+                className="w-full p-2 border rounded mb-2"
+                value={newUser.phone}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, phone: e.target.value })
+                }
+              />
+              <input
+                type="text"
+                placeholder="Địa chỉ"
+                className="w-full p-2 border rounded mb-2"
+                value={newUser.address}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, address: e.target.value })
+                }
+              />
+              <select
+                className="w-full p-2 border rounded mb-2"
+                value={newUser.roleId}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, roleId: Number(e.target.value) })
+                }
+              >
+                <option value={2}>Staff</option>
+                <option value={3}>Manager</option>
+              </select>
+              <div className="flex justify-end gap-2">
+                <button
+                  className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500"
+                  onClick={() => setShowAddUserModal(false)}
+                >
+                  Hủy
+                </button>
+                <button
+                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  onClick={editingUser ? handleUpdateUser : handleAddUser}
+                >
+                  {editingUser ? "Cập nhật" : "Thêm"}
+                </button>
               </div>
             </div>
           </div>
-        ) : (
-          <p className="text-center text-gray-500 py-4">Không có khách hàng nào.</p>
         )}
 
-        {/* Pagination */}
-        <div className="flex justify-center mt-4 gap-1 sm:gap-2">
-          {Array.from({ length: totalPages }, (_, index) => (
-            <button
-              key={index + 1}
-              onClick={() => goToPage(index + 1)}
-              className={`px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm border rounded-md ${
-                currentPage === index + 1
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200 text-gray-700"
-              }`}
-            >
-              {index + 1}
-            </button>
-          ))}
-        </div>
+        {/* Customer Table */}
+        {filteredCustomers.length > 0 ? (
+          <>
+            <table className="w-full border-collapse bg-white shadow-md">
+              <thead>
+                <tr className="bg-gray-200">
+                  <th className="p-3 text-left">Tên</th>
+                  <th className="p-3 text-left">Email</th>
+                  <th className="p-3 text-left">Role</th>
+                  <th className="p-3 text-left">Orders</th>
+                  <th className="p-3 text-left">Trạng thái</th>
+                  <th className="p-3 text-left">Ngày Tạo</th>
+                  <th className="p-3 text-left">Hành động</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentCustomers.map((customer) => {
+                  console.log("Thông tin người dùng:", customer); // Thêm dòng này
+                  const { name, color } = getRoleName(customer.roleId);
+                  return (
+                    <tr key={customer.id} className="border-t">
+                      <td className="p-3 flex items-center gap-2">
+                        <FaUser className="text-blue-500" /> {customer.fullName}
+                      </td>
+                      <td className="p-3">{customer.email}</td>
+                      <td className="p-3">
+                        <span
+                          className={`px-3 py-1 rounded-full text-white text-sm ${color}`}
+                        >
+                          {name}
+                        </span>
+                      </td>
+                      <td className="p-3">{getOrderCount(customer.userId)}</td>
+                      <td className="p-3">
+                        <span
+                          className={`px-3 py-1 rounded-full text-white text-sm ${
+                            customer.isActive ? "bg-green-500" : "bg-red-500"
+                          }`}
+                        >
+                          {customer.isActive ? "Active" : "Inactive"}
+                        </span>
+                      </td>
+                      <td className="p-3">{formatDate(customer.dateCreate)}</td>
+                      <td className="p-3 flex gap-2">
+                        <button
+                          className="text-blue-500"
+                          onClick={() => handleEditUser(customer)}
+                        >
+                          <FaEdit />
+                        </button>
+                        <button
+                          className="text-red-500"
+                          // Thay đổi từ customer.id sang customer.userId
+                          onClick={() =>
+                            handleDeleteUser(customer.userId || customer.id)
+                          }
+                        >
+                          <FaTrash />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+
+            {/* Pagination Box */}
+            <div className="flex justify-center mt-4 gap-2">
+              {Array.from({ length: totalPages }, (_, index) => (
+                <button
+                  key={index + 1}
+                  onClick={() => goToPage(index + 1)}
+                  className={`px-4 py-2 border rounded-md ${
+                    currentPage === index + 1
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200 text-gray-700"
+                  }`}
+                >
+                  {index + 1}
+                </button>
+              ))}
+            </div>
+          </>
+        ) : (
+          <p className="text-center text-gray-500">Không có khách hàng nào.</p>
+        )}
       </div>
     </div>
   );

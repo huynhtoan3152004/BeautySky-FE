@@ -13,41 +13,42 @@ import { Link } from "react-router-dom"; // Import Link từ react-router-dom
 
 const SkincareQuizPopup = ({ onClose }) => {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      {/* Hiệu ứng xuất hiện mượt mà */}
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
-        className="bg-white p-4 sm:p-6 md:p-8 rounded-2xl shadow-2xl w-full max-w-[900px] min-h-[300px] md:h-[500px] relative text-center"
+        className="bg-white p-8 rounded-2xl shadow-2xl w-[900px] h-[500px] relative text-center"
       >
         {/* Nút đóng */}
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 md:top-4 md:right-4 text-gray-500 hover:text-gray-800 text-xl md:text-2xl"
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl"
         >
           ✖
         </button>
 
-        {/* Hình ảnh responsive */}
+        {/* Hình ảnh minh họa */}
         <img
           src="https://tiki.vn/blog/wp-content/uploads/2023/01/cac-buoc-skincare-1.png"
           alt="Skincare Quiz"
-          className="w-[200px] sm:w-[300px] md:w-[400px] mx-auto mb-3 md:mb-4"
+          className="w-[400px] mx-auto mb-4"
         />
 
-        {/* Tiêu đề responsive */}
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 md:mb-3">
+        {/* Tiêu đề */}
+        <h2 className="text-2xl font-bold text-gray-900 mb-3">
           Khám phá loại da của bạn! 🌿
         </h2>
-        <p className="text-sm sm:text-base text-gray-600 mb-4 md:mb-5 px-2">
+        <p className="text-gray-600 mb-5">
           Hãy trả lời một số câu hỏi để chúng tôi giúp bạn chọn sản phẩm phù hợp
           nhất.
         </p>
 
-        {/* Button responsive */}
+        {/* Link đến trang Quiz */}
         <Link
           to="/quizz"
-          className="inline-block bg-gradient-to-r from-[#6BBCFE] to-blue-500 text-white px-4 sm:px-5 py-2 sm:py-3 rounded-lg shadow-lg text-base sm:text-lg hover:scale-105 transition-all duration-300"
+          className="inline-block bg-gradient-to-r from-[#6BBCFE] to-blue-500 text-white px-5 py-3 rounded-lg shadow-lg text-lg hover:scale-105 transition-all duration-300"
         >
           Bắt đầu ngay 🚀
         </Link>

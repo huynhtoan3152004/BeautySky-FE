@@ -76,12 +76,12 @@ const ViewOrder = () => {
   return (
     <>
       <Navbar />
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-purple-100 to-blue-200 px-4 sm:px-6 lg:px-8">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-purple-100 to-blue-200">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="bg-white shadow-lg rounded-lg p-4 sm:p-6 lg:p-8 w-full max-w-lg mx-auto mt-5 mb-5"
+          className="bg-white shadow-lg rounded-lg p-8 max-w-lg w-full mx-auto mt-5 mb-5"
         >
           <h1 className="text-2xl font-bold text-gray-800 text-center mb-4">
             Thông tin đơn hàng
@@ -100,26 +100,24 @@ const ViewOrder = () => {
             <h2 className="text-lg font-semibold text-gray-700">
               Sản phẩm đã mua:
             </h2>
-            <div className="bg-gray-100 p-2 sm:p-4 rounded-lg space-y-4 mt-2">
+            <div className="bg-gray-100 p-4 rounded-lg space-y-4 mt-2">
               {orderData.items.map((item) => (
                 <div
                   key={item.id}
-                  className="flex flex-col sm:flex-row items-start sm:items-center justify-between text-gray-700 space-y-2 sm:space-y-0"
+                  className="flex items-center justify-between text-gray-700"
                 >
-                  <div className="flex items-center space-x-3 w-full sm:w-auto">
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-16 h-16 sm:w-12 sm:h-12 rounded object-cover"
-                    />
-                    <div className="flex-1 sm:flex-initial">
-                      <p className="text-sm sm:text-base">{item.name}</p>
-                      <p className="text-sm text-gray-500">
-                        Số lượng: {item.quantity}
-                      </p>
-                    </div>
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-12 h-12 rounded"
+                  />
+                  <div>
+                    <p>{item.name}</p>
+                    <p className="text-sm text-gray-500">
+                      Số lượng: {item.quantity}
+                    </p>
                   </div>
-                  <span className="text-right w-full sm:w-auto">
+                  <span>
                     {formatCurrency((item.price * item.quantity).toFixed(2))}
                   </span>
                 </div>
@@ -132,7 +130,7 @@ const ViewOrder = () => {
           </div>
 
           {/* Thông tin thanh toán */}
-          <div className="mt-6 bg-blue-50 p-3 sm:p-4 rounded-lg">
+          <div className="mt-6 bg-blue-50 p-4 rounded-lg">
             <h2 className="text-lg font-semibold text-gray-700 flex items-center">
               <CreditCardIcon className="w-6 h-6 text-blue-500 mr-2" /> Thông
               tin thanh toán
@@ -158,7 +156,7 @@ const ViewOrder = () => {
           </div>
 
           {/* Trạng thái giao hàng */}
-          <div className="mt-6 bg-green-50 p-3 sm:p-4 rounded-lg">
+          <div className="mt-6 bg-green-50 p-4 rounded-lg">
             <h2 className="text-lg font-semibold text-gray-700 flex items-center">
               <TruckIcon className="w-6 h-6 text-green-500 mr-2" /> Trạng thái
               giao hàng
@@ -181,16 +179,16 @@ const ViewOrder = () => {
           </div>
 
           {/* Nút điều hướng */}
-          <div className="mt-6 flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0">
+          <div className="mt-6 flex justify-center">
             <button
               onClick={() => navigate("/product")}
-              className="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
             >
               Tiếp tục mua sắm
             </button>
             <button
               onClick={() => navigate("/")}
-              className="w-full sm:w-auto sm:ml-4 px-4 py-2 bg-gray-500 text-white rounded-lg shadow hover:bg-gray-600 transition"
+              className="ml-4 px-4 py-2 bg-gray-500 text-white rounded-lg shadow hover:bg-gray-600 transition"
             >
               Trang chủ
             </button>

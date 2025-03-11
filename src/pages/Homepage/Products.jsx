@@ -44,7 +44,7 @@ const Products = () => {
       {
         breakpoint: 10000,
         settings: {
-          slidesToShow: 4,
+          slidesToShow: 5,
           slidesToScroll: 1,
           infinite: true,
         },
@@ -52,27 +52,22 @@ const Products = () => {
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 3,
+          slidesToShow: 4,
           slidesToScroll: 1,
-          arrows: true,
         },
       },
       {
         breakpoint: 768,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: 3,
           slidesToScroll: 1,
-          arrows: false,
-          dots: true,
         },
       },
       {
         breakpoint: 640,
         settings: {
-          slidesToShow: 1,
+          slidesToShow: 2,
           slidesToScroll: 1,
-          arrows: false,
-          dots: true,
         },
       },
     ],
@@ -127,28 +122,10 @@ const Products = () => {
                           {data.categoryName}
                         </p>
                         <div className="flex items-center justify-center gap-1 mt-auto pt-3">
-                          {data.rating ? (
-                            <>
-                              {Array.from({
-                                length: Math.floor(data.rating),
-                              }).map((_, index) => (
-                                <FaStar
-                                  key={index}
-                                  className="text-yellow-400 text-lg"
-                                />
-                              ))}
-                              <span className="text-sm font-medium text-gray-700">
-                                ({data.rating.toFixed(1)})
-                              </span>
-                            </>
-                          ) : (
-                            <>
-                              <FaStar className="text-gray-300 text-lg" />
-                              <span className="text-sm font-medium text-gray-700">
-                                (0)
-                              </span>
-                            </>
-                          )}
+                          <FaStar className="text-yellow-400 text-lg" />
+                          <span className="text-sm font-medium text-gray-700">
+                            {data.rating || "5.0"}
+                          </span>
                         </div>
                       </div>
                     </div>

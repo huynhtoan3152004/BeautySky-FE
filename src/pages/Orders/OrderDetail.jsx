@@ -72,45 +72,45 @@ const OrderDetail = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-gradient-to-r from-blue-100 to-purple-200 py-10 px-4 sm:px-6">
-        <div className="max-w-3xl mx-auto bg-white shadow-xl rounded-xl p-4 sm:p-6 md:p-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 text-center mb-4 sm:mb-6">
+      <div className="min-h-screen bg-gradient-to-r from-blue-100 to-purple-200 py-10">
+        <div className="max-w-3xl mx-auto bg-white shadow-xl rounded-xl p-8">
+          <h1 className="text-3xl font-bold text-gray-800 text-center mb-6">
             📦 Chi tiết đơn hàng
           </h1>
-          <div className="space-y-3 sm:space-y-4">
-            <p className="text-base sm:text-lg">
+          <div className="space-y-4">
+            <p className="text-lg">
               <strong>Mã đơn hàng:</strong> {order.orderId}
             </p>
-            <p className="text-base sm:text-lg">
+            <p className="text-lg">
               <strong>Ngày đặt:</strong> {order.date}
             </p>
-            <p className="text-base sm:text-lg flex items-center">
+            <p className="text-lg flex items-center">
               <strong>Trạng thái:</strong>&nbsp;
               {order.status === "Đã giao hàng" ? (
-                <CheckCircleIcon className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2" />
+                <CheckCircleIcon className="w-5 h-5 text-green-500 mr-2" />
               ) : order.status === "Đang giao hàng" ? (
-                <TruckIcon className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 mr-2" />
+                <TruckIcon className="w-5 h-5 text-blue-500 mr-2" />
               ) : (
-                <XCircleIcon className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 mr-2" />
+                <XCircleIcon className="w-5 h-5 text-red-500 mr-2" />
               )}
               {order.status}
             </p>
-            <p className="text-base sm:text-lg">
+            <p className="text-lg">
               <strong>Sản phẩm:</strong> {order.items.join(", ")}
             </p>
-            <p className="text-base sm:text-lg">
+            <p className="text-lg">
               <strong>Thanh toán:</strong> {order.payment}
             </p>
-            <p className="text-base sm:text-lg">
+            <p className="text-lg">
               <strong>Mã vận chuyển:</strong> {order.trackingId}
             </p>
-            <p className="text-base sm:text-lg font-semibold">
+            <p className="text-lg font-semibold">
               <strong>Tổng tiền:</strong> {formatCurrency(order.total)}
             </p>
           </div>
           <button
             onClick={() => navigate("/order-history")}
-            className="mt-4 sm:mt-6 w-full px-3 py-2 sm:px-4 sm:py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 text-base sm:text-lg"
+            className="mt-6 w-full px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600"
           >
             Quay lại Lịch sử đơn hàng
           </button>

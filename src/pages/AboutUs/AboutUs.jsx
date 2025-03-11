@@ -24,7 +24,7 @@ const AboutUs = () => {
       <div className="bg-gray-100 min-h-screen text-gray-900">
         {/* 🌟 Hero Section */}
         <section
-          className="relative w-full h-[80vh] sm:h-screen flex items-center justify-center bg-cover bg-center"
+          className="relative w-full h-screen flex items-center justify-center bg-cover bg-center"
           style={{
             backgroundImage:
               "url('https://imageskincare.vn/wp-content/uploads/2022/04/cac-san-pham-image-skincare.jpeg')",
@@ -37,12 +37,12 @@ const AboutUs = () => {
             initial={{ opacity: 0, y: 50, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 1 }}
-            className="relative z-10 text-center text-white p-4 sm:p-6"
+            className="relative z-10 text-center text-white p-6"
           >
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold drop-shadow-lg">
+            <h1 className="text-5xl font-bold drop-shadow-lg">
               Chăm sóc làn da của bạn
             </h1>
-            <p className="mt-4 text-base sm:text-lg text-gray-200 max-w-lg mx-auto px-4">
+            <p className="mt-4 text-lg text-gray-200 max-w-lg mx-auto">
               Khám phá vẻ đẹp tự nhiên với các sản phẩm mỹ phẩm cao cấp của
               chúng tôi.
             </p>
@@ -59,16 +59,16 @@ const AboutUs = () => {
         </section>
 
         {/* ✨ About Section */}
-        <section className="container mx-auto py-8 sm:py-12 md:py-16 px-4 sm:px-6">
+        <section className="container mx-auto py-16 px-6">
           <div
-            className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 md:gap-10 items-center"
+            className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center"
             data-aos="fade-up"
           >
             {/* Ảnh với hiệu ứng viền mềm và bóng đổ */}
             <motion.img
               src="https://tiki.vn/blog/wp-content/uploads/2023/02/review-la-roche-posay-1.jpg"
               alt="Mỹ phẩm thiên nhiên"
-              className="w-full rounded-lg shadow-lg shadow-blue-400 hover:shadow-2xl transition duration-300 border-4"
+              className="rounded-lg shadow-lg shadow-blue-400 hover:shadow-2xl transition duration-300 border-4"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1 }}
@@ -108,9 +108,9 @@ const AboutUs = () => {
         </section>
 
         {/* 🎥 Video Section */}
-        <section className="bg-blue-100 py-8 sm:py-12 md:py-16 text-center px-4">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">Hành Trình Của Chúng Tôi</h2>
-          <p className="mt-4 text-base sm:text-lg text-gray-600">
+        <section className="bg-blue-100 py-16 text-center">
+          <h2 className="text-4xl font-bold">Hành Trình Của Chúng Tôi</h2>
+          <p className="mt-4 text-lg text-gray-600">
             Xem video giới thiệu về thương hiệu mỹ phẩm của chúng tôi.
           </p>
           <motion.div
@@ -120,29 +120,29 @@ const AboutUs = () => {
             transition={{ duration: 1 }}
           >
             <iframe
-              width="100%"
-              height="300"
+              width="700"
+              height="400"
               src="https://www.youtube.com/embed/MihWtTw3Lk4"
               title="Giới thiệu thương hiệu"
               frameBorder="0"
               allow="autoplay; encrypted-media"
               allowFullScreen
-              className="rounded-lg shadow-lg max-w-[700px] sm:h-[350px] md:h-[400px]"
+              className="rounded-lg shadow-lg"
             ></iframe>
           </motion.div>
         </section>
 
         {/* 🚀 CTA Section */}
-        <section className="py-8 sm:py-12 md:py-16 text-center">
-          <div className="flex flex-col md:flex-row items-center justify-center gap-6 sm:gap-8 px-4 sm:px-6">
+        <section className="py-16 text-center">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-8 px-6">
             {/* Phần chữ */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              className="text-center md:text-left max-w-lg"
+              className="text-left md:text-center max-w-lg"
             >
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 leading-snug">
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-800 leading-snug">
                 🌿 Cùng Chúng Tôi <span className="text-[#419fed]">Bảo Vệ</span>{" "}
                 Làn Da Của Bạn!
               </h2>
@@ -172,12 +172,12 @@ const AboutUs = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
               whileHover={{ scale: 1.05 }}
-              className="relative w-full md:w-auto"
+              className="relative"
             >
               <img
                 src="https://cdn.tgdd.vn//News/1448398//larocheposay(2)-845x500.jpg"
                 alt="Bảo vệ làn da"
-                className="w-full max-w-[450px] md:w-[550px] rounded-lg shadow-lg transition-all duration-300 mx-auto"
+                className="w-[450px] md:w-[550px] rounded-lg shadow-lg transition-all duration-300"
               />
               {/* Hiệu ứng ánh sáng lướt qua ảnh */}
               <div className="absolute inset-0 bg-white opacity-10 rounded-lg transition-opacity duration-500 hover:opacity-20"></div>

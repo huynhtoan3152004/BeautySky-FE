@@ -5,12 +5,10 @@ import Footer from "../../components/Footer/Footer";
 import registerImage from "../../assets/register/register.png";
 import { useAuth } from "../../context/AuthContext";
 import Swal from "sweetalert2";
-import { useNotifications } from "../../context/NotificationContext";
 
 function Register() {
   const { register } = useAuth();
   const navigate = useNavigate();
-  const { addNotification } = useNotifications();
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -89,7 +87,6 @@ function Register() {
         icon: "success",
         confirmButtonColor: "#6bbcfe",
       }).then(() => navigate("/login"));
-      addNotification("Bạn đã đăng ký tài khoản thành công! 🎉");
     } catch (err) {
       Swal.fire(
         "Lỗi",
@@ -104,9 +101,9 @@ function Register() {
   return (
     <>
       <Navbar />
-      <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4 py-8">
-        <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-lg overflow-hidden w-full max-w-4xl">
-          <div className="hidden md:block md:w-1/2">
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="flex bg-white shadow-lg rounded-lg overflow-hidden w-full max-w-4xl">
+          <div className="hidden md:block w-1/2">
             <img
               src={registerImage}
               alt="Register"
@@ -114,12 +111,12 @@ function Register() {
             />
           </div>
 
-          <div className="w-full md:w-1/2 p-6 sm:p-8 md:p-10">
-            <h3 className="text-2xl sm:text-3xl font-bold text-center text-[#6bbcfe] mb-4 sm:mb-6">
+          <div className="w-full md:w-1/2 p-10">
+            <h3 className="text-3xl font-bold text-center text-[#6bbcfe] mb-6">
               Tạo tài khoản
             </h3>
 
-            <form onSubmit={handleRegister} className="space-y-3 sm:space-y-4">
+            <form onSubmit={handleRegister} className="space-y-4">
               {Object.keys(formData).map((field) => (
                 <input
                   key={field}
@@ -136,7 +133,7 @@ function Register() {
                   }
                   value={formData[field]}
                   onChange={handleChange}
-                  className="w-full p-2.5 sm:p-3 text-sm sm:text-base border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   required
                 />
               ))}
@@ -144,7 +141,7 @@ function Register() {
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full py-2 sm:py-2.5 text-sm sm:text-base rounded-lg transition duration-300 ${
+                className={`w-full py-2 rounded-lg transition duration-300 ${
                   loading
                     ? "bg-gray-400"
                     : "bg-[#6bbcfe] hover:bg-blue-600 text-white"

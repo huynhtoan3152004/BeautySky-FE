@@ -67,8 +67,8 @@ const ProductReviews = () => {
   const currentReviews = filteredReviews.slice(offset, offset + reviewsPerPage);
 
   return (
-    <div className="w-full mx-auto bg-white shadow-lg rounded-lg p-8 md:p-6 sm:p-4">
-      <h2 className="text-3xl md:text-2xl sm:text-xl font-extrabold text-gray-800 text-center mb-6">
+    <div className="w-full mx-auto bg-white shadow-lg rounded-lg p-8">
+      <h2 className="text-3xl font-extrabold text-gray-800 text-center mb-6">
         Product Reviews
       </h2>
       <input
@@ -76,11 +76,11 @@ const ProductReviews = () => {
         placeholder="Tìm kiếm..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-full md:w-52 p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-400 mb-4"
+        className="w-52 p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-400 mb-4"
       />
       <div className="overflow-x-auto rounded-lg">
         <table className="w-full border-collapse bg-white shadow-md rounded-lg">
-          <thead className="hidden md:table-header-group">
+          <thead>
             <tr className="bg-blue-500 text-white">
               <th className="p-3 text-left">ID</th>
               <th className="p-3 text-left">Tên sản phẩm</th>
@@ -95,29 +95,19 @@ const ProductReviews = () => {
             {currentReviews.map((review) => (
               <tr
                 key={review.id}
-                className="border-b hover:bg-gray-100 transition md:table-row flex flex-col"
+                className="border-b hover:bg-gray-100 transition"
               >
-                <td className="p-3 md:table-cell flex justify-between md:block before:content-['ID:'] before:font-bold before:md:hidden">
-                  <span>{review.reviewId}</span>
+                <td className="p-3">{review.reviewId}</td>
+                <td className="p-3">{review.productName}</td>
+                <td className="p-3">{review.userName}</td>
+                <td className="p-3 text-yellow-500">{review.rating} ⭐</td>
+                <td className="p-3">{review.comment}</td>
+                <td className="p-3">
+                  {new Date(review.reviewDate).toLocaleDateString()}
                 </td>
-                <td className="p-3 md:table-cell flex justify-between md:block before:content-['Sản_phẩm:'] before:font-bold before:md:hidden">
-                  <span>{review.productName}</span>
-                </td>
-                <td className="p-3 md:table-cell flex justify-between md:block before:content-['Người_dùng:'] before:font-bold before:md:hidden">
-                  <span>{review.userName}</span>
-                </td>
-                <td className="p-3 md:table-cell flex justify-between md:block before:content-['Đánh_giá:'] before:font-bold before:md:hidden">
-                  <span className="text-yellow-500">{review.rating} ⭐</span>
-                </td>
-                <td className="p-3 md:table-cell flex justify-between md:block before:content-['Bình_luận:'] before:font-bold before:md:hidden">
-                  <span>{review.comment}</span>
-                </td>
-                <td className="p-3 md:table-cell flex justify-between md:block before:content-['Ngày:'] before:font-bold before:md:hidden">
-                  <span>{new Date(review.reviewDate).toLocaleDateString()}</span>
-                </td>
-                <td className="p-3 md:table-cell flex justify-center">
+                <td className="p-3 text-center">
                   <button
-                    className="bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600 transition w-full md:w-auto"
+                    className="bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600 transition"
                     onClick={() => handleDeleteReview(review)}
                   >
                     Delete
@@ -133,7 +123,7 @@ const ProductReviews = () => {
         nextLabel={"→"}
         pageCount={pageCount}
         onPageChange={({ selected }) => setCurrentPage(selected)}
-        containerClassName="flex justify-center space-x-2 mt-4 flex-wrap gap-y-2"
+        containerClassName="flex justify-center space-x-2 mt-4"
         pageClassName="px-3 py-1 border rounded-lg cursor-pointer hover:bg-blue-500 hover:text-white"
         activeClassName="bg-blue-500 text-white"
         previousClassName="px-3 py-1 border rounded-lg cursor-pointer hover:bg-gray-300"

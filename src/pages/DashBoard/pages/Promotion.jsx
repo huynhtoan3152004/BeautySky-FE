@@ -210,81 +210,76 @@ const PromotionManagement = () => {
   };
 
   return (
-    <div className="p-4 md:p-6 bg-white shadow-lg rounded-lg">
-      <h2 className="text-xl md:text-2xl font-bold mb-4 text-gray-800">
+    <div className="p-6 bg-white shadow-lg rounded-lg">
+      <h2 className="text-2xl font-bold mb-4 text-gray-800">
         Quản lí khuyến mãi
       </h2>
 
-      {/* Search Input - làm cho responsive hơn */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-4">
-        <input
-          type="text"
-          placeholder="Tìm kiếm khuyến mãi..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full sm:w-64 p-2 border border-gray-300 rounded-md"
-        />
+      {/* Search Input */}
+      <input
+        type="text"
+        placeholder="Tìm kiếm khuyến mãi..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="w-400 p-2 border border-gray-300 rounded-md mb-4"
+      />
 
-        <button
-          onClick={handleAddClick}
-          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 flex items-center justify-center"
-        >
-          <FaPlus className="mr-2" /> Thêm khuyến mãi
-        </button>
-      </div>
+      {/* Add Promotion Button */}
+      <button
+        onClick={handleAddClick}
+        className="bg-blue-500 text-white px-4 py-2 rounded-md mb-4 hover:bg-blue-600 flex items-center"
+      >
+        <FaPlus className="mr-2" /> Thêm khuyến mãi
+      </button>
 
       {/* Loading State */}
       {loading ? (
         <p className="text-center">Đang tải danh sách khuyến mãi...</p>
       ) : (
         <>
-          {/* Responsive Table Container */}
-          <div className="overflow-x-auto">
-            <table className="w-full bg-white border border-gray-200 rounded-lg overflow-hidden min-w-[320px] md:min-w-[600px]">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th className="py-2 px-2 text-sm md:text-base md:py-3 md:px-4 border">Tên</th>
-                  <th className="py-2 px-2 text-sm md:text-base md:py-3 md:px-4 border">Giảm giá</th>
-                  <th className="py-2 px-2 text-sm md:text-base md:py-3 md:px-4 border hidden sm:table-cell">Ngày bắt đầu</th>
-                  <th className="py-2 px-2 text-sm md:text-base md:py-3 md:px-4 border hidden sm:table-cell">Ngày hết hạn</th>
-                  <th className="py-2 px-2 text-sm md:text-base md:py-3 md:px-4 border">Actions</th>
+          {/* Promotions Table */}
+          <table className="w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="py-3 px-4 border">Tên</th>
+                <th className="py-3 px-4 border">Giảm giá</th>
+                <th className="py-3 px-4 border">Ngày bắt đầu</th>
+                <th className="py-3 px-4 border">Ngày hết hạn</th>
+                <th className="py-3 px-4 border">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {paginatedPromotions.map((promo) => (
+                <tr key={promo.id} className="text-center border">
+                  <td className="py-3 px-4">{promo.name}</td>
+                  <td className="py-3 px-4">{promo.discount}</td>
+                  <td className="py-3 px-4">{promo.startDate}</td>
+                  <td className="py-3 px-4">{promo.endDate}</td>
+                  <td className="py-3 px-4 flex justify-center space-x-2">
+                    <button
+                      onClick={() => handleEditClick(promo)}
+                      className="text-yellow-500 hover:text-yellow-700"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      onClick={() => handleDeletePromotion(promo.id)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      <FaTrash />
+                    </button>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {paginatedPromotions.map((promo) => (
-                  <tr key={promo.id} className="text-center border hover:bg-gray-50">
-                    <td className="py-2 px-2 text-sm md:text-base md:py-3 md:px-4">{promo.name}</td>
-                    <td className="py-2 px-2 text-sm md:text-base md:py-3 md:px-4">{promo.discount}</td>
-                    <td className="py-2 px-2 text-sm md:text-base md:py-3 md:px-4 hidden sm:table-cell">{promo.startDate}</td>
-                    <td className="py-2 px-2 text-sm md:text-base md:py-3 md:px-4 hidden sm:table-cell">{promo.endDate}</td>
-                    <td className="py-2 px-2 md:py-3 md:px-4">
-                      <div className="flex justify-center space-x-2 md:space-x-4">
-                        <button
-                          onClick={() => handleEditClick(promo)}
-                          className="text-yellow-500 hover:text-yellow-700"
-                        >
-                          <FaEdit size={16} className="md:w-[18px] md:h-[18px]" />
-                        </button>
-                        <button
-                          onClick={() => handleDeletePromotion(promo.id)}
-                          className="text-red-500 hover:text-red-700"
-                        >
-                          <FaTrash size={16} className="md:w-[18px] md:h-[18px]" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
 
-          {/* Responsive Pagination */}
-          <div className="flex flex-wrap justify-center mt-4 gap-2">
+          {/* Pagination Controls */}
+          <div className="flex justify-center mt-4 space-x-2">
             <button
               onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
               disabled={currentPage === 1}
-              className="px-3 py-1 rounded-md bg-gray-300 text-sm"
+              className="px-3 py-1 rounded-md bg-gray-300"
             >
               Trước
             </button>
@@ -292,7 +287,7 @@ const PromotionManagement = () => {
               <button
                 key={i}
                 onClick={() => setCurrentPage(i + 1)}
-                className={`px-3 py-1 rounded-md text-sm ${
+                className={`px-3 py-1 rounded-md ${
                   currentPage === i + 1
                     ? "bg-blue-600 text-white"
                     : "bg-gray-200"
@@ -306,7 +301,7 @@ const PromotionManagement = () => {
                 setCurrentPage(Math.min(currentPage + 1, totalPages))
               }
               disabled={currentPage === totalPages}
-              className="px-3 py-1 rounded-md bg-gray-300 text-sm"
+              className="px-3 py-1 rounded-md bg-gray-300"
             >
               Tiếp
             </button>
@@ -314,11 +309,11 @@ const PromotionManagement = () => {
         </>
       )}
 
-      {/* Responsive Modal */}
+      {/* Modal for Adding/Editing Promotion */}
       {showModal && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50 p-2 md:p-4">
-          <div className="bg-white p-3 md:p-6 rounded-lg shadow-lg w-full max-w-[90%] md:max-w-md">
-            <h3 className="text-base md:text-xl font-semibold mb-3 md:mb-4">
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+            <h3 className="text-xl font-semibold mb-4">
               {isEditing ? "Chỉnh sửa khuyến mãi" : "Thêm khuyến mãi"}
             </h3>
             <input
@@ -326,7 +321,7 @@ const PromotionManagement = () => {
               placeholder="Tên khuyến mãi"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="w-full p-2 text-sm md:text-base border mb-2 rounded-md"
+              className="w-full p-2 border mb-2"
             />
             <input
               type="number"
@@ -338,30 +333,30 @@ const PromotionManagement = () => {
                   discount: e.target.value.replace(/\D/g, ""),
                 })
               }
-              className="w-full p-2 text-sm md:text-base border mb-2 rounded-md"
+              className="w-full p-2 border mb-2"
             />
             <input
               type="date"
               value={form.startDate}
               onChange={(e) => setForm({ ...form, startDate: e.target.value })}
-              className="w-full p-2 text-sm md:text-base border mb-2 rounded-md"
+              className="w-full p-2 border mb-2"
             />
             <input
               type="date"
               value={form.endDate}
               onChange={(e) => setForm({ ...form, endDate: e.target.value })}
-              className="w-full p-2 text-sm md:text-base border mb-3 md:mb-4 rounded-md"
+              className="w-full p-2 border mb-4"
             />
-            <div className="flex justify-between gap-2">
+            <div className="flex justify-between">
               <button
-                className="bg-gray-400 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-md hover:bg-gray-500 w-1/2 text-sm md:text-base"
+                className="bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-500 w-1/2 mr-2"
                 onClick={() => setShowModal(false)}
               >
                 Hủy
               </button>
               <button
                 onClick={handleAddOrEditPromotion}
-                className="bg-blue-500 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-md hover:bg-blue-600 w-1/2 text-sm md:text-base"
+                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 w-1/2"
               >
                 {isEditing ? "Lưu" : "Thêm"}
               </button>

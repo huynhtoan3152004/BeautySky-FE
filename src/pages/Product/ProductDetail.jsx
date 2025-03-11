@@ -12,7 +12,6 @@ import { FaArrowLeft, FaShoppingCart } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { Rating, Chip, Dialog, DialogContent, IconButton } from "@mui/material";
 import reviewsAPI from "../../services/reviews";
-import dayjs from "dayjs";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -135,83 +134,59 @@ const ProductDetail = () => {
   };
 
   const handleReviewSubmit = async () => {
-    if (isSubmitting) return;
-    setIsSubmitting(true);
+    if (isSubmitting) return; // Tránh gửi nhiều lần
+    setIsSubmitting(true); // Bật trạng thái gửi
+
+    const { currentUser } = useAuth();
+
+    if (!currentUser) {
+      Swal.fire("Lỗi", "Bạn cần đăng nhập để gửi đánh giá!", "warning");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!newComment.trim()) {
+      Swal.fire("Lỗi", "Vui lòng nhập nội dung đánh giá!", "warning");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (newRating === 0) {
+      Swal.fire("Lỗi", "Vui lòng chọn số sao!", "warning");
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
-      // Kiểm tra user đã đăng nhập chưa
-      const { currentUser } = useAuth();
-      if (!currentUser) {
-        Swal.fire({
-          icon: "warning",
-          title: "Cần đăng nhập",
-          text: "Bạn cần đăng nhập để gửi đánh giá!",
-        });
-        return;
+      const formData = new FormData();
+      formData.append("productId", product.productId);
+      formData.append("userId", currentUser.id);
+      formData.append("rating", newRating);
+      formData.append("comment", newComment);
+      if (selectedImage) {
+        formData.append("image", selectedImage);
       }
 
-      // Validate dữ liệu đầu vào
-      if (!newComment.trim()) {
-        Swal.fire({
-          icon: "warning",
-          title: "Thiếu nội dung",
-          text: "Vui lòng nhập nội dung đánh giá!",
-        });
-        return;
-      }
-
-      if (newRating === 0) {
-        Swal.fire({
-          icon: "warning",
-          title: "Thiếu đánh giá",
-          text: "Vui lòng chọn số sao đánh giá!",
-        });
-        return;
-      }
-
-      // Tạo object review theo cấu trúc API
-      const reviewData = {
-        productId: product.productId,
-        userId: currentUser.id,
-        rating: newRating,
-        comment: newComment,
-        reviewDate: new Date().toISOString(),
-      };
-
-      // Gọi API tạo review
-      const response = await reviewsAPI.createReviews(reviewData);
-
-      // Xử lý response thành công
-      if (response.status === 200) {
-        // Thêm review mới vào state
-        const newReview = {
-          ...reviewData,
-          reviewId: response.data.reviewId, // Lấy ID từ response nếu có
-        };
-        setReviews((prevReviews) => [newReview, ...prevReviews]);
-
-        // Reset form
-        setNewRating(0);
-        setNewComment("");
-        setSelectedImage(null);
-        setPreviewImage(null);
-
-        // Thông báo thành công
-        Swal.fire({
-          icon: "success",
-          title: "Thành công!",
-          text: "Đánh giá của bạn đã được gửi thành công!",
-        });
-      }
-    } catch (error) {
-      console.error("Lỗi khi gửi đánh giá:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Lỗi!",
-        text: "Có lỗi xảy ra khi gửi đánh giá. Vui lòng thử lại sau.",
+      const response = await reviewsAPI.createReviews(formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
+
+      setReviews([response.data, ...reviews]);
+      setNewRating(0);
+      setNewComment("");
+      setSelectedImage(null);
+      setPreviewImage(null);
+
+      Swal.fire("Thành công!", "Đánh giá của bạn đã được gửi!", "success");
+    } catch (error) {
+      console.error("Lỗi gửi đánh giá:", error);
+      Swal.fire(
+        "Lỗi!",
+        error.response?.data?.message || "Có lỗi xảy ra khi gửi đánh giá.",
+        "error"
+      );
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false); // Tắt trạng thái gửi sau khi hoàn tất
     }
   };
 
@@ -227,23 +202,23 @@ const ProductDetail = () => {
     <>
       <Navbar />
       <div
-        className="min-h-screen flex flex-col items-center py-8 px-4 sm:py-12 sm:px-6"
-        style={{ backgroundColor: "#f8fafc" }}
+        className="min-h-screen flex flex-col items-center py-12 px-6"
+        style={{ backgroundColor: "#e9f3fc" }}
       >
-        <div className="bg-white rounded-lg shadow-2xl p-4 sm:p-8 flex flex-col md:flex-row w-full max-w-6xl animate-fadeIn gap-4 sm:gap-8 border-0 hover:shadow-xl transition-shadow duration-300">
+        <div className="bg-white rounded-none shadow-xl p-10 flex flex-col md:flex-row w-full max-w-6xl animate-fadeIn gap-8 border">
           <div className="w-full md:w-1/2">
             <img
               src={images[activeImage]}
               alt={product.productName}
-              className="w-full h-[300px] sm:h-[400px] md:h-auto rounded-none shadow-lg object-cover cursor-pointer"
+              className="w-full h-auto rounded-none shadow-lg object-cover cursor-pointer"
               onClick={() => handleOpenDialog(activeImage)}
             />
 
-            <div className="flex mt-2 sm:mt-4 overflow-x-auto gap-2 pb-2">
+            <div className="flex mt-4 overflow-x-auto gap-2 pb-2">
               {images.map((image, index) => (
                 <div
                   key={index}
-                  className={`min-w-[60px] sm:min-w-[80px] h-16 sm:h-20 border-2 rounded cursor-pointer ${
+                  className={`min-w-[80px] h-20 border-2 rounded cursor-pointer ${
                     activeImage === index
                       ? "border-blue-500"
                       : "border-gray-200"
@@ -260,29 +235,22 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          <div className="md:ml-6 lg:ml-10 flex flex-col justify-between mt-4 md:mt-0 w-full space-y-4 sm:space-y-6">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 hover:text-blue-600 transition-colors duration-300">
+          <div className="md:ml-10 flex flex-col justify-between mt-6 md:mt-0 w-full space-y-4">
+            <h1 className="text-4xl font-bold text-gray-900">
               {product.productName}
             </h1>
 
-            <div className="flex items-center space-x-4">
-              <Rating
-                value={product.rating || 0}
-                readOnly
-                precision={0.5}
-                size="large"
-              />
-              <span className="text-lg font-medium text-blue-600">
+            <div className="flex items-center">
+              <Rating value={product.rating || 0} readOnly precision={0.5} />
+              <span className="ml-2 text-gray-600">
                 ({productReviews.length} đánh giá)
               </span>
             </div>
 
-            <p className="text-lg text-gray-700 leading-relaxed">
-              {product.description}
-            </p>
+            <p className="text-lg text-gray-600">{product.description}</p>
 
-            <div className="flex items-center bg-blue-50 p-4 rounded-lg">
-              <p className="text-4xl font-bold text-blue-600 mr-4">
+            <div className="flex items-center">
+              <p className="text-3xl font-bold text-gray-500 mr-4">
                 {formatCurrency(product.price)}
               </p>
               {product.discountPrice && (
@@ -290,37 +258,26 @@ const ProductDetail = () => {
                   label={`-${Math.round(
                     (1 - product.discountPrice / product.price) * 100
                   )}%`}
-                  color="error"
-                  size="medium"
-                  className="animate-pulse"
+                  color="secondary"
+                  size="small"
                 />
               )}
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
-              <div className="flex flex-col">
-                <span className="text-gray-600 text-sm">Loại da</span>
-                <span className="font-semibold text-blue-700">
-                  {product.skinTypeName || "Không xác định"}
-                </span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-gray-600 text-sm">Danh mục</span>
-                <span className="font-semibold text-blue-700">
-                  {product.categoryName || "Không xác định"}
-                </span>
-              </div>
-            </div>
-
-            <div className="flex items-center bg-gray-50 p-4 rounded-lg">
-              <span className="mr-4 font-semibold text-gray-700">
-                Số lượng:
+            <p className="text-md text-gray-500">
+              Loại da:
+              <span className="font-semibold">
+                {product.skinType?.skinTypeName || "Không xác định"}
               </span>
-              <div className="flex items-center border-2 border-blue-200 rounded-lg overflow-hidden">
+            </p>
+
+            <div className="flex items-center">
+              <span className="mr-4 font-semibold">Số lượng:</span>
+              <div className="flex items-center border rounded-md">
                 <button
                   onClick={() => handleQuantityChange(quantity - 1)}
                   disabled={quantity <= 1}
-                  className="px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-600 font-bold transition-colors"
+                  className="px-3 py-1 bg-gray-100"
                 >
                   -
                 </button>
@@ -330,53 +287,54 @@ const ProductDetail = () => {
                   onChange={(e) =>
                     handleQuantityChange(Number(e.target.value) || 1)
                   }
-                  className="w-20 text-center bg-white border-x-2 border-blue-200"
+                  className="w-16 text-center"
                   min="1"
                 />
                 <button
                   onClick={() => handleQuantityChange(quantity + 1)}
-                  className="px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-600 font-bold transition-colors"
+                  className="px-3 py-1 bg-gray-100"
                 >
                   +
                 </button>
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+            <div className="flex space-x-4">
               <button
-                className={`w-full py-3 sm:py-4 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 ${
+                className={`w-full py-4 rounded-none font-semibold transition-all flex items-center justify-center gap-2 shadow-md ${
                   product.quantity === 0
                     ? "bg-gray-400 text-gray-800 cursor-not-allowed"
-                    : "bg-blue-600 hover:bg-blue-700 text-white transform hover:scale-105"
+                    : "bg-[#6BBCFE] hover:bg-blue-500 text-white"
                 }`}
                 onClick={handleAddToCart}
                 disabled={product.quantity === 0}
               >
-                <FaShoppingCart className="text-xl" />
+                <FaShoppingCart />
                 {product.quantity === 0 ? "Hết hàng" : "Thêm vào giỏ hàng"}
               </button>
               <button
-                className="w-full bg-gray-200 text-gray-800 py-3 sm:py-4 rounded-lg font-semibold hover:bg-gray-300 transition-all flex items-center justify-center gap-2 transform hover:scale-105"
+                className="w-full bg-gray-300 text-gray-900 py-4 rounded-none font-semibold hover:bg-gray-400 transition-all flex items-center justify-center gap-2 shadow-md"
                 onClick={() => navigate(-1)}
               >
-                <FaArrowLeft className="text-xl" /> Quay lại
+                <FaArrowLeft /> Quay lại
               </button>
             </div>
+            <div className="flex space-x-2"></div>
           </div>
         </div>
 
-        {/* Tab panel section */}
-        <div className="w-full max-w-6xl mt-6 sm:mt-10 bg-white p-4 sm:p-8 rounded-lg shadow-lg border-0">
-          <div className="flex flex-wrap mb-4 sm:mb-6 gap-2">
+        {/* Phần Feedback */}
+        <div className="w-full max-w-6xl mt-10 bg-white p-6 rounded-none shadow-lg border">
+          <div className="flex mb-4">
             {["Mô tả", "Thành phần", `Đánh giá (${productReviews.length})`].map(
               (tab, index) => (
                 <button
                   key={tab}
-                  className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium transition-all duration-300 text-sm sm:text-base ${
+                  className={`px-4 py-2 mr-2 ${
                     tabValue === index
-                      ? "bg-blue-600 text-white shadow-lg transform scale-105"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200 text-gray-700"
+                  } rounded-none`}
                   onClick={() => setTabValue(index)}
                 >
                   {tab}
@@ -415,21 +373,11 @@ const ProductDetail = () => {
                         >
                           {/* Avatar & Tên người dùng */}
                           <div className="flex items-center gap-3">
-                            {user.avatar ? (
-                              <img
-                                src={user.avatar}
-                                alt={user.fullName || "Người dùng ẩn danh"}
-                                className="w-10 h-10 rounded-full object-cover border"
-                              />
-                            ) : (
-                              <img
-                                src={`https://api.dicebear.com/9.x/adventurer/svg?seed=Liliana${
-                                  user.userName || "default"
-                                }`}
-                                alt="Avatar ảo"
-                                className="w-10 h-10 rounded-full border"
-                              />
-                            )}
+                            <img
+                              src={user.avatar || "/default-avatar.png"}
+                              alt={user.fullName || "Người dùng ẩn danh"}
+                              className="w-10 h-10 rounded-full object-cover border"
+                            />
                             <div>
                               <p className="text-lg font-semibold">
                                 {user.userName || "Người dùng ẩn danh"}
@@ -443,11 +391,6 @@ const ProductDetail = () => {
                           </div>
                           {/* Nội dung đánh giá */}
                           <p className="mt-2 text-gray-700">{review.comment}</p>
-                          <p>
-                            {dayjs(review.reviewDate).format(
-                              "DD/MM/YYYY HH:mm"
-                            )}
-                          </p>
                         </div>
                       );
                     })}

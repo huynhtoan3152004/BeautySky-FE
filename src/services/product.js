@@ -2,28 +2,80 @@ import axiosInstance from "../config/axios/axiosInstance";
 
 const endPoint = "/Products";
 
-const productAPI = {
+const productApi = {
   getAll: async () => {
     const response = await axiosInstance.get(endPoint);
     return response;
   },
-  createProduct: async (payload) => {
-    const response = await axiosInstance.post(endPoint, payload);
-    if (response.status >= 200 && response.status < 300) {
-      return response;
-    }
+  
+  getById: async (id) => {
+    const response = await axiosInstance.get(`${endPoint}/${id}`);
     return response;
   },
-  editProduct: async (id, payload) => {
-    return await axiosInstance.put(`${endPoint}/${id}`, payload);
+  
+  createProduct: async (formData) => {
+    try {
+      const response = await axiosInstance.post(
+        `${endPoint}`, 
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        }
+      );
+      return response;
+    } catch (error) {
+      console.error("Error creating product:", error.response?.data || error.message);
+      throw error;
+    }
   },
-  searchProduct: async (keyword) => {
-    const response = await axiosInstance.get(`${endPoint}?name=${keyword}`);
-    return response.data;
+  
+  editProduct: async (id, formData) => {
+    try {
+      const response = await axiosInstance.put(
+        `${endPoint}/${id}`, 
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        }
+      );
+      return response;
+    } catch (error) {
+      console.error("Error updating product:", error.response?.data || error.message);
+      throw error;
+    }
   },
+  
   deleteProduct: async (id) => {
-    return await axiosInstance.delete(`${endPoint}/${id}`);
+    try {
+      const response = await axiosInstance.delete(`${endPoint}/${id}`);
+      return response;
+    } catch (error) {
+      console.error("Error deleting product:", error.response?.data || error.message);
+      throw error;
+    }
   },
+  
+  uploadImage: async (formData) => {
+    try {
+      const response = await axiosInstance.post(
+        `${endPoint}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response;
+    } catch (error) {
+      console.error("Error uploading image:", error.response?.data || error.message);
+      throw error;
+    }
+  }
 };
 
-export default productAPI;
+export default productApi;

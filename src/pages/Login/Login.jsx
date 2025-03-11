@@ -6,7 +6,6 @@ import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import loginImage from "../../assets/login/login.png";
 import { useAuth } from "../../context/AuthContext";
-import { useNotifications } from "../../context/NotificationContext";
 
 function Login() {
   const { user, login } = useAuth();
@@ -14,7 +13,6 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [recaptchaToken, setRecaptchaToken] = useState(null);
   const navigate = useNavigate();
-  const { addNotification } = useNotifications();
 
   useEffect(() => {
     if (user) {
@@ -51,7 +49,6 @@ function Login() {
         timer: 2000,
         showConfirmButton: false,
       });
-      addNotification("Bạn đã đăng nhập thành công! 🎉");
 
       navigate("/");
     } catch (err) {
@@ -69,8 +66,8 @@ function Login() {
   return (
     <>
       <Navbar />
-      <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4 py-8">
-        <div className="flex bg-white shadow-lg rounded-lg overflow-hidden w-full max-w-4xl">
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="flex bg-white shadow-lg rounded-lg overflow-hidden w-3/4 max-w-4xl">
           <div className="w-1/2 hidden md:block">
             <img
               src={loginImage}
@@ -79,8 +76,8 @@ function Login() {
             />
           </div>
 
-          <div className="w-full md:w-1/2 p-4 sm:p-6 md:p-8 flex flex-col justify-center">
-            <h3 className="text-xl sm:text-2xl font-semibold text-center mb-4">
+          <div className="w-full md:w-1/2 p-8 flex flex-col justify-center">
+            <h3 className="text-2xl font-semibold text-center mb-4">
               Đăng nhập
             </h3>
 
@@ -91,7 +88,7 @@ function Login() {
                 placeholder="Email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full p-2 sm:p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 required
               />
               <input
@@ -100,23 +97,22 @@ function Login() {
                 placeholder="Mật khẩu"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full p-2 sm:p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 required
               />
 
               {/* Google reCAPTCHA */}
-              <div className="flex justify-center transform scale-90 sm:scale-100">
-                <ReCAPTCHA
-                  sitekey="6LdigtQqAAAAANHvagd73iYJm0B4n2mQjXvf9aX9"
-                  onChange={(token) => setRecaptchaToken(token)}
-                  onExpired={() => setRecaptchaToken(null)}
-                />
-              </div>
+              <ReCAPTCHA
+                sitekey="6LdigtQqAAAAANHvagd73iYJm0B4n2mQjXvf9aX9"
+                onChange={(token) => setRecaptchaToken(token)}
+                onExpired={() => setRecaptchaToken(null)}
+              />
 
+              {/* Nút đăng nhập */}
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full py-2 sm:py-3 rounded-lg transition duration-300 text-sm sm:text-base ${
+                className={`w-full py-2 rounded-lg transition duration-300 ${
                   loading
                     ? "bg-gray-400"
                     : "bg-[#6bbcfe] hover:bg-blue-600 text-white"
@@ -126,7 +122,7 @@ function Login() {
               </button>
             </form>
 
-            <div className="flex justify-between items-center mt-4 text-xs sm:text-sm">
+            <div className="flex justify-between items-center mt-4 text-sm">
               <p className="text-gray-600">
                 Bạn chưa có tài khoản?{" "}
                 <Link to="/register" className="text-blue-500 hover:underline">

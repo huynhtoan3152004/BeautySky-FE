@@ -93,18 +93,18 @@ const QuizPage = () => {
     <>
       <Navbar />
       <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6">
-        <h1 className="text-5xl md:text-4xl sm:text-3xl font-bold text-[#6BBCFE] animate-pulse text-center mb-6 px-4">
+        <h1 className="text-5xl font-bold text-[#6BBCFE] animate-pulse text-center mb-6">
           🔍 Kiểm tra loại da của bạn
         </h1>
-        <div className="bg-white shadow-xl p-10 sm:p-6 rounded-2xl w-full max-w-2xl text-center">
+        <div className="bg-white shadow-xl p-10 rounded-2xl w-full max-w-2xl text-center">
           {loading ? (
             <p>Đang tải câu hỏi...</p>
           ) : result ? (
             <div className="text-center">
-              <h2 className="text-4xl sm:text-3xl font-bold text-green-600">
+              <h2 className="text-4xl font-bold text-green-600">
                 🎉 Kết quả của bạn
               </h2>
-              <p className="text-2xl sm:text-xl mt-4 font-semibold">
+              <p className="text-2xl mt-4 font-semibold">
                 Loại da của bạn:{" "}
                 <span className="text-blue-500">
                   {result.bestSkinType.skinTypeName}
@@ -131,12 +131,12 @@ const QuizPage = () => {
             </div>
           ) : questions.length > 0 ? (
             <div>
-              {/* Progress indicators */}
-              <div className="flex justify-center items-center my-4 space-x-2 flex-wrap gap-y-2">
+              {/* Hiển thị tiến trình câu hỏi */}
+              <div className="flex justify-center items-center my-4 space-x-2">
                 {questions.map((_, index) => (
                   <div
                     key={index}
-                    className={`w-7 h-7 sm:w-6 sm:h-6 flex items-center justify-center rounded-full text-sm font-medium border-2 ${
+                    className={`w-8 h-8 flex items-center justify-center rounded-full text-sm font-medium border-2 ${
                       index === currentQuestionIndex
                         ? "bg-blue-500 text-white border-blue-500"
                         : "bg-gray-100 border-gray-300"
@@ -146,16 +146,20 @@ const QuizPage = () => {
                   </div>
                 ))}
               </div>
-              
-              {/* Question display */}
-              <h2 className="text-2xl sm:text-xl font-semibold text-blue-600 px-2">
+              <div className="mt-4 mb-6 text-sm text-gray-500">
+                Đã trả lời: {Object.keys(selectedAnswers).length}/
+                {questions.length} câu hỏi
+              </div>
+
+              {/* Hiển thị câu hỏi */}
+              <h2 className="text-2xl font-semibold text-blue-600">
                 {questions[currentQuestionIndex].question}
               </h2>
-              <div className="mt-6 space-y-4 px-2">
+              <div className="mt-6 space-y-4">
                 {questions[currentQuestionIndex].options.map((option) => (
                   <label
                     key={option.id}
-                    className={`flex items-center justify-start space-x-4 cursor-pointer rounded-xl p-4 sm:p-3 shadow-md bg-gray-100 hover:bg-blue-200 ${
+                    className={`flex items-center justify-start space-x-4 cursor-pointer rounded-xl p-4 shadow-md bg-gray-100 hover:bg-blue-200 ${
                       selectedAnswers[questions[currentQuestionIndex].id] ===
                       option.id
                         ? "bg-blue-300"
@@ -168,30 +172,30 @@ const QuizPage = () => {
                       )
                     }
                   >
-                    <div className="w-6 h-6 sm:w-5 sm:h-5 flex items-center justify-center border-2 border-blue-500 rounded-full">
+                    <div className="w-6 h-6 flex items-center justify-center border-2 border-blue-500 rounded-full">
                       {selectedAnswers[questions[currentQuestionIndex].id] ===
                         option.id && "✔"}
                     </div>
-                    <span className="text-lg sm:text-base">{option.text}</span>
+                    <span className="text-lg">{option.text}</span>
                   </label>
                 ))}
               </div>
 
-              {/* Navigation buttons */}
-              <div className="mt-6 flex justify-between items-center w-full flex-col sm:flex-row gap-4">
-                <div className="w-full sm:w-auto order-2 sm:order-1">
-                  {currentQuestionIndex > 0 && (
-                    <button
-                      className="bg-gradient-to-r from-gray-400 to-gray-600 text-white py-3 px-6 rounded-xl font-semibold shadow-md hover:from-gray-500 hover:to-gray-700 transition-all w-full sm:w-auto"
-                      onClick={() => setCurrentQuestionIndex((prev) => prev - 1)}
-                    >
-                      ⬅️ Quay lại
-                    </button>
-                  )}
-                </div>
+              {/* Nút điều hướng */}
+              <div className="mt-6 flex justify-between items-center w-full">
+                {/* Nút Quay Lại */}
+                {currentQuestionIndex > 0 && (
+                  <button
+                    className="bg-gradient-to-r from-gray-400 to-gray-600 text-white py-3 px-6 rounded-xl font-semibold shadow-md hover:from-gray-500 hover:to-gray-700 transition-all"
+                    onClick={() => setCurrentQuestionIndex((prev) => prev - 1)}
+                  >
+                    ⬅️ Quay lại
+                  </button>
+                )}
 
+                {/* Nút Tiếp Theo hoặc Hoàn Thành */}
                 <button
-                  className={`py-3 px-8 rounded-xl font-semibold shadow-xl transition-all w-full sm:w-auto order-1 sm:order-2 ${
+                  className={`py-3 px-8 rounded-xl font-semibold shadow-xl transition-all ${
                     currentQuestionIndex < questions.length - 1
                       ? "bg-gradient-to-r from-blue-400 to-blue-600 text-white hover:from-blue-500 hover:to-blue-700 disabled:opacity-50"
                       : "bg-gradient-to-r from-green-400 to-green-600 text-white hover:from-green-500 hover:to-green-700"

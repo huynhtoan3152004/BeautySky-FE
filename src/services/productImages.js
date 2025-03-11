@@ -21,10 +21,10 @@ const productImagesAPI = {
     return await axiosInstance.delete(`${endPoint}/${id}`);
   },
   uploadproductImages: async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+  
     try {
-      const formData = new FormData();
-      formData.append("image", file); // Đảm bảo backend nhận đúng key "image"
-
       const response = await axiosInstance.post(
         `${endPoint}/UploadFile`,
         formData,
@@ -34,20 +34,13 @@ const productImagesAPI = {
           },
         }
       );
-
-      if (response.data && response.data.imageUrl) {
-        return response.data.imageUrl; // Đảm bảo trả về URL ảnh
-      } else {
-        throw new Error("Không nhận được URL ảnh từ API!");
-      }
+      
+      return response.data.imageUrl;
     } catch (error) {
-      console.error(
-        "Lỗi khi upload ảnh:",
-        error.response?.data || error.message
-      );
-      throw error; // Ném lỗi để xử lý phía trên
+      console.error("Error uploading image:", error.response?.data || error.message);
+      throw error; // Ném lại để cho phép người gọi xử lý
     }
-  },
+  }
 };
 
 export default productImagesAPI;

@@ -15,7 +15,6 @@ const RevenueChart = ({ revenueGrowth }) => {
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false,
     plugins: {
       legend: {
         display: true,
@@ -30,16 +29,11 @@ const RevenueChart = ({ revenueGrowth }) => {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg hover:scale-105 transition
-      h-[400px] md:h-[450px] lg:h-[500px]
-      p-3 sm:p-4 md:p-6
-      ">
-      <h3 className="text-base md:text-lg font-semibold mb-2 md:mb-4 text-gray-800">
+    <div className="bg-white p-6 rounded-2xl shadow-lg hover:scale-105 transition">
+      <h3 className="text-lg font-semibold mb-4 text-gray-800">
         Revenue Growth
       </h3>
-      <div className="h-[calc(100%-2rem)]">
-        <Bar data={data} options={options} />
-      </div>
+      <Bar data={data} options={options} />
     </div>
   );
 };

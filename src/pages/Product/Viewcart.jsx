@@ -147,21 +147,21 @@ const Viewcart = () => {
         {cartItems.length === 0 ? (
           <p className="text-center text-gray-500 text-lg">Giỏ hàng trống.</p>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Danh sách sản phẩm */}
-            <div className="lg:col-span-2 bg-white p-4 sm:p-6 shadow-lg rounded-lg">
+            <div className="md:col-span-2 bg-white p-6 shadow-lg rounded-lg">
               {cartItems.map((item) => (
                 <div
                   key={item.id}
-                  className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b pb-4 mb-4"
+                  className="flex items-center justify-between border-b pb-4 mb-4"
                 >
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
+                  <div className="flex items-center space-x-4">
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="w-full sm:w-20 h-40 sm:h-20 object-cover rounded-lg border"
+                      className="w-20 h-20 object-cover rounded-lg border"
                     />
-                    <div className="w-full sm:w-auto">
+                    <div>
                       <h2 className="text-lg font-semibold">{item.name}</h2>
                       <p className="text-gray-600">
                         {formatCurrency(item.price)}
@@ -169,14 +169,18 @@ const Viewcart = () => {
                       <div className="flex items-center mt-2 space-x-2">
                         <button
                           className="px-3 py-1 bg-gray-300 rounded-lg text-lg"
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          onClick={() =>
+                            updateQuantity(item.id, item.quantity - 1)
+                          }
                         >
                           −
                         </button>
                         <span className="text-lg">{item.quantity}</span>
                         <button
                           className="px-3 py-1 bg-gray-300 rounded-lg text-lg"
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          onClick={() =>
+                            updateQuantity(item.id, item.quantity + 1)
+                          }
                         >
                           +
                         </button>
@@ -184,7 +188,7 @@ const Viewcart = () => {
                     </div>
                   </div>
                   <button
-                    className="text-red-500 hover:text-red-700 mt-4 sm:mt-0"
+                    className="text-red-500 hover:text-red-700"
                     onClick={() => removeFromCart(item.id)}
                   >
                     <FaTrash size={20} />
@@ -194,7 +198,7 @@ const Viewcart = () => {
             </div>
 
             {/* Thanh toán */}
-            <div className="bg-white p-4 sm:p-6 shadow-lg rounded-lg">
+            <div className="bg-white p-6 shadow-lg rounded-lg">
               <h2 className="text-xl font-bold mb-4">Tóm tắt đơn hàng</h2>
               <p className="mb-2 text-lg">
                 Tổng tiền:{" "}
@@ -240,27 +244,35 @@ const Viewcart = () => {
 
               {/* Phương thức thanh toán */}
               <h2 className="text-lg font-bold mb-3">Phương thức thanh toán</h2>
-              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+              <div className="flex space-x-4">
                 <button
-                  className={`flex items-center justify-center space-x-2 px-4 py-2 border rounded-lg transition-all duration-300 w-full sm:w-auto
-                    ${paymentMethod === "VNPay"
-                      ? "bg-blue-500 text-white shadow-lg ring-2 ring-blue-300 scale-105"
-                      : "bg-gray-200 hover:bg-blue-100"
-                    }`}
+                  className={`flex items-center space-x-2 px-4 py-2 border rounded-lg transition-all duration-300 
+    ${
+      paymentMethod === "VNPay"
+        ? "bg-blue-500 text-white shadow-lg ring-2 ring-blue-300 scale-105"
+        : "bg-gray-200 hover:bg-blue-100"
+    }`}
                   onClick={() => setPaymentMethod("VNPay")}
                 >
-                  <CreditCardIcon className="h-5 w-5" />
+                  <CreditCardIcon
+                    className="h-5 w-5 transition-transform duration-300 
+    ${paymentMethod === 'VNPay' ? 'scale-110' : ''}"
+                  />
                   <span>VNPay</span>
                 </button>
                 <button
-                  className={`flex items-center justify-center space-x-2 px-4 py-2 border rounded-lg transition-all duration-300 w-full sm:w-auto
-                    ${paymentMethod === "Cash"
-                      ? "bg-green-500 text-white shadow-lg ring-2 ring-green-300 scale-105"
-                      : "bg-gray-200 hover:bg-green-100"
-                    }`}
+                  className={`flex items-center space-x-2 px-4 py-2 border rounded-lg transition-all duration-300 
+    ${
+      paymentMethod === "Cash"
+        ? "bg-green-500 text-white shadow-lg ring-2 ring-green-300 scale-105"
+        : "bg-gray-200 hover:bg-green-100"
+    }`}
                   onClick={() => setPaymentMethod("Cash")}
                 >
-                  <BanknotesIcon className="h-5 w-5" />
+                  <BanknotesIcon
+                    className={`h-5 w-5 transition-transform duration-300 
+    ${paymentMethod === "Cash" ? "scale-110" : ""}`}
+                  />
                   <span>Tiền mặt</span>
                 </button>
               </div>

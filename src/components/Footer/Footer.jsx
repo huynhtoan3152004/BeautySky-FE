@@ -6,8 +6,8 @@ import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
 const Footer = () => {
   return (
     <div data-aos="fade-up" className="bg-white text-gray-700">
-      <section className="max-w-[1500px] mx-auto px-4 sm:px-6 py-8 sm:py-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <section className="max-w-[1500px] mx-auto px-6 py-10">
+        <div className="grid md:grid-cols-2 gap-8">
           {/* Logo & Mô tả */}
           <div className="flex flex-col items-center text-center">
             <a href="#/" className="flex flex-col items-center space-y-2">
@@ -18,7 +18,7 @@ const Footer = () => {
                 className="w-40"
               />
             </a>
-            <p className="mt-4 leading-6 max-w-[400px] px-4 sm:px-0">
+            <p className="mt-4 leading-6 max-w-[400px]">
               Nhà phân phối độc quyền của <b>Sky Beauty</b> tại Việt Nam là Công
               ty TNHH Thương mại FPT.
             </p>
@@ -47,13 +47,13 @@ const Footer = () => {
           </div>
 
           {/* Liên kết */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 gap-6">
             {/* Thông tin công ty */}
-            <div className="text-center sm:text-left">
-              <h1 className="text-lg sm:text-xl font-semibold mb-3">
+            <div>
+              <h1 className="text-xl font-semibold mb-3">
                 🏢 Công ty TNHH Thương mại FPT
               </h1>
-              <ul className="space-y-2 text-sm sm:text-base">
+              <ul className="space-y-2">
                 <li>
                   📍 Địa chỉ: Lô E2a-7, Đường D1, Khu Công Nghệ Cao, Thủ Đức,
                   TP.HCM
@@ -73,11 +73,11 @@ const Footer = () => {
             </div>
 
             {/* Điều khoản dịch vụ */}
-            <div className="text-center sm:text-left">
-              <h1 className="text-lg sm:text-xl font-semibold mb-3">
+            <div>
+              <h1 className="text-xl font-semibold mb-3">
                 📜 Điều khoản dịch vụ
               </h1>
-              <ul className="space-y-2 text-sm sm:text-base">
+              <ul className="space-y-2">
                 <li className="cursor-pointer hover:text-blue-500 transition-colors">
                   🛒 Hướng dẫn mua hàng
                 </li>
@@ -96,7 +96,7 @@ const Footer = () => {
         </div>
 
         {/* Bản quyền */}
-        <div className="text-center py-4 sm:py-6 mt-6 sm:mt-8 border-t border-gray-300 text-sm sm:text-base">
+        <div className="text-center py-6 mt-8 border-t border-gray-300">
           <p>
             © 2025 | <b>Sky Beauty</b>. All rights reserved.
           </p>

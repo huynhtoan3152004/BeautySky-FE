@@ -30,14 +30,6 @@ const TopProducts = () => {
   const { addToCart } = useCart();
   const { products } = useDataContext();
 
-  // Sắp xếp sản phẩm theo rating (cao nhất trước)
-  const topRatedProducts = [...products]
-    .filter(
-      (product) => product.rating !== null && product.rating !== undefined
-    )
-    .sort((a, b) => b.rating - a.rating) // Sắp xếp giảm dần theo rating
-    .slice(0, 10); // Lấy top 10 sản phẩm có rating cao nhất
-
   // Slider settings
   const settings = {
     dots: true,
@@ -62,19 +54,10 @@ const TopProducts = () => {
         },
       },
       {
-        breakpoint: 1280,
+        breakpoint: 1024,
         settings: {
           slidesToShow: 3,
           slidesToScroll: 1,
-          arrows: true,
-        },
-      },
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-          arrows: true,
         },
       },
       {
@@ -82,8 +65,6 @@ const TopProducts = () => {
         settings: {
           slidesToShow: 2,
           slidesToScroll: 1,
-          arrows: false,
-          dots: true,
         },
       },
       {
@@ -91,8 +72,6 @@ const TopProducts = () => {
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
-          arrows: false,
-          dots: true,
         },
       },
     ],
@@ -100,14 +79,14 @@ const TopProducts = () => {
 
   return (
     <div>
-      <div className="container py-10 md:py-20 px-4 md:px-0">
+      <div className="container py-20">
         <div className="text-center max-w-[800px] mx-auto">
           <p data-aos="fade-up" className="text-sm text-black">
             Sản phẩm được đánh giá cao nhất dành cho bạn
           </p>
           <h1
             data-aos="fade-up"
-            className="text-center text-2xl md:text-4xl underline underline-offset-8 hover:underline decoration-1 decoration-black font-bold text-[#6BBCFE]"
+            className="text-center text-4xl underline underline-offset-8 hover:underline decoration-1 decoration-black font-bold text-[#6BBCFE]"
           >
             Sản phẩm tốt nhất
           </h1>
@@ -117,10 +96,10 @@ const TopProducts = () => {
         </div>
 
         {/* Slider Section */}
-        <div data-aos="fade-up" className="relative max-w-7xl mx-auto px-4 md:px-8">
-          {topRatedProducts.length > 0 ? (
+        <div data-aos="fade-up" className="relative max-w-7xl mx-auto">
+          {products.length > 0 ? (
             <Slider {...settings} className="pb-4">
-              {topRatedProducts.map((product) => (
+              {products.map((product) => (
                 <div key={product.productId} className="px-3 pb-4 pt-1">
                   <div
                     data-aos="zoom-in"
@@ -133,7 +112,7 @@ const TopProducts = () => {
                       </span>
                     </div>
 
-                    {/* Image container */}
+                    {/* Image container - Positioned to float above the card */}
                     <div
                       className="absolute top-0 left-0 right-0 h-[150px] cursor-pointer z-20 mt-6"
                       onClick={() => navigate(`/product/${product.productId}`)}
@@ -147,44 +126,39 @@ const TopProducts = () => {
                           alt={product.productName}
                           className="max-w-[200px] max-h-[150px] object-contain transition-all duration-500 filter"
                         />
+                        {/* Add a subtle glow effect on hover */}
                         <div className="absolute inset-0 rounded-full bg-blue-400/20 blur-xl opacity-0 group-hover:opacity-70 transition-opacity duration-300"></div>
                       </div>
                     </div>
 
-                    {/* Card content */}
+                    {/* Card content with proper spacing and alignment */}
                     <div className="flex flex-col h-full pt-44 pb-4 px-3 items-center justify-between">
-                      {/* Rating */}
-                      <div className="flex items-center justify-center gap-1 mb-4">
-                        {[...Array(5)].map((_, index) => (
-                          <FaStar
-                            key={index}
-                            className={`${
-                              index < Math.floor(product.rating)
-                                ? "text-yellow-500"
-                                : "text-gray-300"
-                            }`}
-                          />
-                        ))}
-                        <span className="ml-2 text-sm text-gray-600">
-                          ({product.rating.toFixed(1)})
-                        </span>
+                      {/* Upper content section with calculated space */}
+                      <div className="flex flex-col items-center w-full py-4">
+                        {/* Rating stars - fixed height */}
+                        <div className="flex items-center justify-center gap-1 mb-4">
+                          <FaStar className="text-yellow-500" />
+                          <FaStar className="text-yellow-500" />
+                          <FaStar className="text-yellow-500" />
+                          <FaStar className="text-yellow-500" />
+                          <FaStar className="text-yellow-500" />
+                        </div>
+
+                        {/* Product name - now shows up to 2 lines without truncating */}
+                        <div className="w-full text-center mb-1 min-h-[50px] flex items-center justify-center">
+                          <h1 className="text-lg font-bold line-clamp-2">
+                            {product.productName}
+                          </h1>
+                        </div>
+                        {/* Price - centered with the same width as button */}
+                        <div className="w-full text-center mb-2">
+                          <p className="font-bold text-sm">
+                            {formatCurrency(product.price.toFixed(2))}
+                          </p>
+                        </div>
                       </div>
 
-                      {/* Product name */}
-                      <div className="w-full text-center mb-1 min-h-[50px] flex items-center justify-center">
-                        <h1 className="text-lg font-bold line-clamp-2">
-                          {product.productName}
-                        </h1>
-                      </div>
-
-                      {/* Price */}
-                      <div className="w-full text-center mb-2">
-                        <p className="font-bold text-sm">
-                          {formatCurrency(product.price.toFixed(2))}
-                        </p>
-                      </div>
-
-                      {/* Add to cart button */}
+                      {/* Button at the bottom with the same width as content above */}
                       <div className="w-full pt-4">
                         <button
                           className="bg-primary hover:scale-105 duration-300 text-black py-2 px-4 rounded-full group-hover:bg-yellow-300 group-hover:text-primary w-full text-sm"
