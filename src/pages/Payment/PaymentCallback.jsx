@@ -15,23 +15,57 @@ const PaymentCallback = () => {
         const processPayment = async () => {
             try {
                 const queryParams = new URLSearchParams(location.search);
-                const vnp_ResponseCode = queryParams.get('vnp_ResponseCode');
-                const vnp_TxnRef = queryParams.get('vnp_TxnRef');
-
-                // Kiểm tra nếu là hủy thanh toán
-                if (vnp_ResponseCode === '24') {
-                    navigate('/paymentfailed', {
-                        state: {
-                            error: 'Bạn đã hủy thanh toán',
-                            orderId: vnp_TxnRef
-                        }
-                    });
+                
+                // Gọi API để xử lý payment callback
+                const response = await paymentAPI.processVnPayCallback(location.search);
+                
+                // Kiểm tra nếu response là một redirect
+                if (response.redirectTo) {
+                    switch (response.redirectTo) {
+                        case 'paymentsuccess':
+                            navigate('/paymentsuccess', {
+                                state: {
+                                    orderId: response.orderId,
+                                    paymentId: response.paymentId,
+                                    message: response.message,
+                                    status: 'Completed'
+                                }
+                            });
+                            break;
+                            
+                        case 'paymentfailed':
+                            navigate('/paymentfailed', {
+                                state: {
+                                    error: response.message,
+                                    orderId: response.orderId,
+                                    code: response.code
+                                }
+                            });
+                            break;
+                            
+                        case 'paymentcanceled':
+                            navigate('/paymentfailed', {
+                                state: {
+                                    error: response.message || 'Bạn đã hủy thanh toán',
+                                    orderId: response.orderId,
+                                    isCanceled: true
+                                }
+                            });
+                            break;
+                            
+                        default:
+                            // Fallback to payment failed
+                            navigate('/paymentfailed', {
+                                state: {
+                                    error: 'Có lỗi xảy ra trong quá trình thanh toán',
+                                    orderId: response.orderId
+                                }
+                            });
+                    }
                     return;
                 }
 
-                // Gọi API để xử lý payment callback
-                const response = await paymentAPI.processVnPayCallback(location.search);
-
+                // Xử lý response thông thường (không phải redirect)
                 if (response.status === 200) {
                     const { orderId, paymentId } = response.data;
                     navigate('/paymentsuccess', {
@@ -43,10 +77,22 @@ const PaymentCallback = () => {
                         }
                     });
                 } else {
+                    // Xử lý các trường hợp lỗi khác
                     throw new Error(response.data?.message || 'Có lỗi xảy ra trong quá trình xử lý thanh toán');
                 }
             } catch (error) {
                 console.error('Payment processing error:', error);
+                
+                // Kiểm tra nếu đây là lỗi hủy thanh toán
+                if (error.message === 'payment_canceled') {
+                    navigate('/paymentfailed', {
+                        state: {
+                            error: 'Bạn đã hủy thanh toán',
+                            isCanceled: true
+                        }
+                    });
+                    return;
+                }
                 
                 // Xử lý các loại lỗi cụ thể
                 if (error.response) {
@@ -71,15 +117,6 @@ const PaymentCallback = () => {
                             setError(error.response.data?.message || 'Có lỗi xảy ra trong quá trình xử lý thanh toán');
                             setIsProcessing(false);
                     }
-                } else if (error.message === 'redirect') {
-                    // Nếu là lỗi redirect, chuyển hướng đến trang lỗi
-                    navigate('/paymentfailed', {
-                        state: {
-                            error: 'Có lỗi xảy ra trong quá trình thanh toán',
-                            orderId: location.search.includes('vnp_TxnRef') ? 
-                                new URLSearchParams(location.search).get('vnp_TxnRef') : null
-                        }
-                    });
                 } else {
                     setError(error.message || 'Có lỗi xảy ra trong quá trình xử lý thanh toán');
                     setIsProcessing(false);

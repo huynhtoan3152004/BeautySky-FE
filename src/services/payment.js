@@ -162,12 +162,53 @@ const paymentsAPI = {
         });
         return response;
     } catch (error) {
-        // Nếu BE redirect, chúng ta sẽ nhận được error network
-        // Trong trường hợp này, chúng ta sẽ để component xử lý redirect
+        // Check if this is a redirect error
+        if (!error.response && error.message === 'Network Error') {
+            // Extract information from the URL that the backend tried to redirect to
+            const redirectUrl = error.request?.responseURL;
+            
+            if (redirectUrl) {
+                const url = new URL(redirectUrl);
+                const params = new URLSearchParams(url.search);
+                
+                // Check if this is a payment canceled redirect
+                if (url.pathname.includes('/paymentcanceled')) {
+                    return {
+                        redirectTo: 'paymentcanceled',
+                        orderId: params.get('orderId'),
+                        message: params.get('message') || 'Bạn đã hủy thanh toán'
+                    };
+                }
+                
+                // Check if this is a payment failed redirect
+                if (url.pathname.includes('/paymentfailed')) {
+                    return {
+                        redirectTo: 'paymentfailed',
+                        orderId: params.get('orderId'),
+                        message: params.get('message') || 'Thanh toán thất bại',
+                        code: params.get('code')
+                    };
+                }
+                
+                // Check if this is a payment success redirect
+                if (url.pathname.includes('/paymentsuccess')) {
+                    return {
+                        redirectTo: 'paymentsuccess',
+                        orderId: params.get('orderId'),
+                        paymentId: params.get('paymentId'),
+                        message: 'Thanh toán thành công'
+                    };
+                }
+            }
+            
+            // If we can't determine the redirect type, assume it's a payment failure
+            throw new Error('payment_canceled');
+        }
+        
+        // For other types of errors, throw them as before
         if (error.response) {
             throw error;
         } else {
-            // Nếu là network error (do redirect), ném lại error để component xử lý
             throw new Error('redirect');
         }
     }
