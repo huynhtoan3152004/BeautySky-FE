@@ -45,7 +45,7 @@ const Footer = () => {
                 <FaInstagram className="text-3xl text-gray-600 hover:text-pink-500" />
               </a>
               <a
-                href="#"
+                href="https://www.facebook.com/le.hoanghai.90663894"
                 className="hover:text-[#6BBCFE] transition-transform transform hover:scale-110"
               >
                 <FaFacebook className="text-3xl text-gray-600 hover:text-blue-600" />

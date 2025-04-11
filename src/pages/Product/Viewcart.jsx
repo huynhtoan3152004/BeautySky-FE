@@ -126,6 +126,28 @@ const Viewcart = () => {
 
   const handleProceedToPayment = async () => {
     try {
+      // Kiểm tra đăng nhập
+      if (!user) {
+        Swal.fire({
+          icon: "warning",
+          title: "Vui lòng đăng nhập",
+          html: `
+            <div class="text-left">
+              <p class="mb-2">Bạn cần đăng nhập để thực hiện thanh toán.</p>
+              <p class="text-sm text-gray-600">Sau khi đăng nhập, bạn có thể tiếp tục mua hàng.</p>
+            </div>
+          `,
+          confirmButtonText: "Đăng nhập ngay",
+          showCancelButton: true,
+          cancelButtonText: "Để sau"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            navigate('/login');
+          }
+        });
+        return;
+      }
+
       const selectedProducts = cartItems.filter(
         (item) => selectedItems[item.productId]
       );
@@ -215,8 +237,14 @@ const Viewcart = () => {
       console.error("Error details:", error);
       Swal.fire({
         icon: "error",
-        title: "Lỗi!",
-        text: error.message || "Đã có lỗi xảy ra khi đặt hàng.",
+        title: "Không thể tạo đơn hàng",
+        html: `
+          <div class="text-left">
+            <p class="mb-2 text-red-600 font-medium">${error.message || "Đã có lỗi xảy ra khi đặt hàng."}</p>
+            <p class="text-sm text-gray-600 mt-2">Vui lòng kiểm tra lại thông tin và thử lại sau.</p>
+          </div>
+        `,
+        confirmButtonText: "Đồng ý"
       });
     }
   };

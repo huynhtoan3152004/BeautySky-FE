@@ -99,12 +99,16 @@ const PromotionManagement = () => {
     // Sau đó lọc theo từ khóa tìm kiếm
     if (!searchLower) return true;
 
+    // Tìm kiếm theo tất cả các trường
     return (
-      (promo.name && promo.name.toLowerCase().includes(searchLower)) ||
+      // Tìm kiếm theo từng chữ cái trong tên
+      (promo.name && promo.name.toLowerCase().split('').some(char => char.includes(searchLower))) ||
       (promo.discount && promo.discount.replace('%', '').includes(searchLower)) ||
       (promo.startDate && promo.startDate.includes(searchLower)) ||
       (promo.endDate && promo.endDate.includes(searchLower)) ||
-      (promo.id && promo.id.toString().includes(searchLower))
+      (promo.id && promo.id.toString().includes(searchLower)) ||
+      (promo.quantity && promo.quantity.toString().includes(searchLower)) ||
+      (promo.isActive && (promo.isActive ? 'đang hoạt động' : 'đã kết thúc').includes(searchLower))
     );
   });
 
@@ -147,7 +151,7 @@ const PromotionManagement = () => {
   // Trong phần JSX, cập nhật hiển thị số lượng
   const statusCounts = getStatusCounts();
 
-  // �� Thêm hoặc sửa khuyến mãi
+  // Thêm hoặc sửa khuyến mãi
   const handleAddOrEditPromotion = async () => {
     try {
       if (!form.name || !form.discount || !form.startDate || !form.endDate || form.quantity < 0) {
@@ -159,8 +163,27 @@ const PromotionManagement = () => {
         return;
       }
 
-      // Kiểm tra ngày bắt đầu không được trước ngày hiện tại
-      if (new Date(form.startDate) < new Date().setHours(0, 0, 0, 0)) {
+      // Kiểm tra discount và quantity không được âm
+      if (parseInt(form.discount) < 0) {
+        Swal.fire({
+          icon: "error",
+          title: "Lỗi!",
+          text: "Phần trăm giảm giá không được âm!",
+        });
+        return;
+      }
+
+      if (parseInt(form.quantity) < 0) {
+        Swal.fire({
+          icon: "error",
+          title: "Lỗi!",
+          text: "Số lượng không được âm!",
+        });
+        return;
+      }
+
+      // Chỉ kiểm tra ngày bắt đầu không được trước ngày hiện tại khi thêm mới
+      if (!isEditing && new Date(form.startDate) < new Date().setHours(0, 0, 0, 0)) {
         Swal.fire({
           icon: "error",
           title: "Lỗi!",
@@ -205,6 +228,7 @@ const PromotionManagement = () => {
                     startDate: form.startDate,
                     endDate: form.endDate,
                     quantity: form.quantity,
+                    isActive: true
                   }
                 : p
             )

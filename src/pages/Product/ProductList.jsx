@@ -38,7 +38,6 @@ const ProductList = ({ selectedSkinType, selectedCategory, sortOrder }) => {
 
   useEffect(() => {
     if (user) {
-      console.log(user)
       setFormData({
         name: user.name || "",
         email: user.email || "",
@@ -338,7 +337,7 @@ const ProductList = ({ selectedSkinType, selectedCategory, sortOrder }) => {
           html: `
             <div class="text-left">
               <p class="mb-2">Không thể tạo đơn hàng:</p>
-              <p class="text-sm text-gray-600">${orderError.response?.data?.message || orderError.message || 'Vui lòng thử lại sau'}</p>
+              <p class="text-sm text-gray-600">${orderError.message || 'Vui lòng thử lại sau'}</p>
               ${orderError.response?.data?.errors ? `
                 <ul class="list-disc pl-4 mt-2 text-sm text-red-500">
                   ${orderError.response.data.errors.map(err => `<li>${err}</li>`).join('')}

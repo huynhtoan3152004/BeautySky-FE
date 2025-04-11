@@ -66,6 +66,13 @@ const orderAPI = {
           "Detailed error:",
           JSON.stringify(error.response.data, null, 2)
         );
+
+        // Nếu server trả về message cụ thể, sử dụng message đó
+        if (typeof error.response.data === 'string') {
+          throw new Error(error.response.data);
+        } else if (error.response.data.message) {
+          throw new Error(error.response.data.message);
+        }
       }
       throw new Error(error.response?.data?.message || "Lỗi khi tạo đơn hàng");
     }

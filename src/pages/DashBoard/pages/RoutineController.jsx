@@ -197,6 +197,8 @@ const RoutineController = () => {
       setError(null);
     }
   };
+
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 p-4 md:p-6">
       <header className="text-center mb-8 md:mb-12">
