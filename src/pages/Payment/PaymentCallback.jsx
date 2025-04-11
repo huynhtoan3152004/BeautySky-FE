@@ -15,17 +15,22 @@ const PaymentCallback = () => {
         const processPayment = async () => {
             try {
                 const queryParams = new URLSearchParams(location.search);
-                // const vnp_ResponseCode = queryParams.get('vnp_ResponseCode');
-                // const vnp_TxnRef = queryParams.get('vnp_TxnRef');
+                const vnp_ResponseCode = queryParams.get('vnp_ResponseCode');
+                const vnp_TxnRef = queryParams.get('vnp_TxnRef');
 
-                // if (!vnp_ResponseCode || !vnp_TxnRef) {
-                //     throw new Error('Thiếu thông tin thanh toán');
-                // }
+                // Kiểm tra nếu là hủy thanh toán
+                if (vnp_ResponseCode === '24') {
+                    navigate('/paymentfailed', {
+                        state: {
+                            error: 'Bạn đã hủy thanh toán',
+                            orderId: vnp_TxnRef
+                        }
+                    });
+                    return;
+                }
 
                 // Gọi API để xử lý payment callback
                 const response = await paymentAPI.processVnPayCallback(location.search);
-
-                console.log(response)
 
                 if (response.status === 200) {
                     const { orderId, paymentId } = response.data;
@@ -38,7 +43,6 @@ const PaymentCallback = () => {
                         }
                     });
                 } else {
-                    // Xử lý các trường hợp lỗi khác
                     throw new Error(response.data?.message || 'Có lỗi xảy ra trong quá trình xử lý thanh toán');
                 }
             } catch (error) {
@@ -67,6 +71,15 @@ const PaymentCallback = () => {
                             setError(error.response.data?.message || 'Có lỗi xảy ra trong quá trình xử lý thanh toán');
                             setIsProcessing(false);
                     }
+                } else if (error.message === 'redirect') {
+                    // Nếu là lỗi redirect, chuyển hướng đến trang lỗi
+                    navigate('/paymentfailed', {
+                        state: {
+                            error: 'Có lỗi xảy ra trong quá trình thanh toán',
+                            orderId: location.search.includes('vnp_TxnRef') ? 
+                                new URLSearchParams(location.search).get('vnp_TxnRef') : null
+                        }
+                    });
                 } else {
                     setError(error.message || 'Có lỗi xảy ra trong quá trình xử lý thanh toán');
                     setIsProcessing(false);
