@@ -11,7 +11,7 @@ import promotionsAPI from "../../services/promotions";
 
 const ITEMS_PER_PAGE = 12;
 
-const ProductList = ({ selectedSkinType, selectedCategory, sortOrder }) => {
+const ProductList = ({ selectedSkinType, selectedCategory, selectedRating, sortOrder }) => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { products, fetchProduct, isLoading } = useDataContext();
@@ -34,7 +34,7 @@ const ProductList = ({ selectedSkinType, selectedCategory, sortOrder }) => {
 
   useEffect(() => {
     fetchProduct();
-  }, [selectedSkinType, selectedCategory]);
+  }, [selectedSkinType, selectedCategory, selectedRating]);
 
   useEffect(() => {
     if (user) {
@@ -101,6 +101,7 @@ const ProductList = ({ selectedSkinType, selectedCategory, sortOrder }) => {
 
         const productSkinType = product.skinTypeName?.toLowerCase() || "";
         const productCategory = product.categoryName?.toLowerCase() || "";
+        const productRating = product.rating || 0;
 
         const selectedSkinTypeLower = selectedSkinType.toLowerCase();
         const selectedCategoryLower = selectedCategory.toLowerCase();
@@ -113,12 +114,16 @@ const ProductList = ({ selectedSkinType, selectedCategory, sortOrder }) => {
           selectedCategoryLower === "tất cả" ||
           productCategory.includes(selectedCategoryLower);
 
-        return skinTypeFilter && categoryFilter;
+        const ratingFilter =
+          selectedRating === 0 ||
+          productRating >= selectedRating;
+
+        return skinTypeFilter && categoryFilter && ratingFilter;
       })
       .sort((a, b) =>
         sortOrder === "asc" ? a.price - b.price : b.price - a.price
       );
-  }, [products, selectedSkinType, selectedCategory, sortOrder]);
+  }, [products, selectedSkinType, selectedCategory, selectedRating, sortOrder]);
 
   const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
   const paginatedProducts = filteredProducts.slice(

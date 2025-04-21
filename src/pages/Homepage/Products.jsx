@@ -126,27 +126,27 @@ const Products = () => {
             <Slider {...settings} className="pb-4">
               {randomProducts.map((data, index) => (
                 <div key={data.productId} className="px-2 pb-4">
-                  <Link to={`/product/${data.productId}`} className="block">
+                  <Link to={`/product/${data.productId}`} className="block h-full">
                     <div
                       data-aos="fade-up"
                       data-aos-delay={index * 100}
                       className="bg-white p-5 shadow-xl hover:shadow-blue-400 transition-all duration-300 transform hover:-translate-y-2 hover:scale-105 text-center cursor-pointer h-full flex flex-col rounded-lg mx-1"
                     >
-                      <div className="flex justify-center">
+                      <div className="flex justify-center h-[250px]">
                         <img
                           src={
                             data.productsImages?.[0]?.imageUrl ||
                             "https://via.placeholder.com/200"
                           }
                           alt={data.productName}
-                          className="h-[250px] w-[300px] object-contain transition-transform duration-300"
+                          className="h-full w-[300px] object-contain transition-transform duration-300"
                         />
                       </div>
                       <div className="mt-4 flex flex-col flex-grow rounded-b-xl bg-white p-3">
-                        <h3 className="font-semibold text-lg text-gray-900 line-clamp-2">
+                        <h3 className="font-semibold text-lg text-gray-900 line-clamp-2 h-[3em]">
                           {data.productName}
                         </h3>
-                        <p className="text-sm text-gray-500 mt-1">
+                        <p className="text-sm text-gray-500 mt-1 h-[1.5em]">
                           {data.categoryName}
                         </p>
                         <div className="flex items-center justify-center gap-1 mt-auto pt-3">

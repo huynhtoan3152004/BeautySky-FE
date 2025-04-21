@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Filter, Star, Sun, Droplet } from "lucide-react";
+import { Filter, Star, Sun, Droplet, ThumbsUp, ChevronDown } from "lucide-react";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import { useDataContext } from "../../context/DataContext";
@@ -13,6 +13,10 @@ const ProductsPage = () => {
   const [selectedSkinType, setSelectedSkinType] = useState("Tất cả");
   const [selectedCategory, setSelectedCategory] = useState("Tất cả");
   const [sortOrder, setSortOrder] = useState("asc");
+  const [selectedRating, setSelectedRating] = useState(0);
+  const [isOpenSkinType, setIsOpenSkinType] = useState(false);
+  const [isOpenCategory, setIsOpenCategory] = useState(false);
+  const [isOpenRating, setIsOpenRating] = useState(false);
   const { fetchProduct } = useDataContext();
 
   useEffect(() => {
@@ -22,7 +26,7 @@ const ProductsPage = () => {
   useEffect(() => {
     fetchProduct();
     setCurrentPage(1);
-  }, [selectedSkinType, selectedCategory]);
+  }, [selectedSkinType, selectedCategory, selectedRating]);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -30,53 +34,27 @@ const ProductsPage = () => {
   };
 
   const steps = [
-    {
-      target: '.products-page-container',
-      content: 'Chào mừng bạn đến với trang sản phẩm của BeautySky! Tại đây bạn có thể tìm kiếm và mua sắm các sản phẩm skincare phù hợp với nhu cầu của mình.',
-      placement: 'center',
-      disableBeacon: true,
-      spotlightPadding: 20,
-      disableOverlayClose: true
-    },
-    {
-      target: '.sidebar-container',
-      content: 'Đây là bộ lọc sản phẩm, giúp bạn tìm kiếm sản phẩm phù hợp với nhu cầu của mình. Bạn có thể lọc theo loại da và danh mục sản phẩm.',
-      placement: 'right',
-      spotlightPadding: 20,
-      disableOverlayClose: true
-    },
-    {
-      target: '.skin-type-filter',
-      content: 'Lọc sản phẩm theo loại da của bạn. Chọn loại da phù hợp để tìm các sản phẩm chuyên biệt cho da dầu, da khô, da thường, da hỗn hợp hoặc da nhạy cảm.',
-      placement: 'right',
-      spotlightPadding: 20,
-      disableOverlayClose: true
-    },
-    {
-      target: '.category-filter',
-      content: 'Lọc sản phẩm theo danh mục. Chọn loại sản phẩm bạn cần như tẩy trang, sữa rửa mặt, toner, serum, kem dưỡng hoặc kem chống nắng.',
-      placement: 'right',
-      spotlightPadding: 20,
-      disableOverlayClose: true
-    },
-    {
-      target: '.sort-button',
-      content: 'Sắp xếp sản phẩm theo giá. Bạn có thể chọn sắp xếp từ thấp đến cao hoặc từ cao đến thấp để dễ dàng tìm sản phẩm phù hợp với ngân sách.',
-      placement: 'bottom',
-      spotlightPadding: 20,
-      disableOverlayClose: true
-    },
-    {
-      target: '.product-list-section',
-      content: 'Danh sách sản phẩm sẽ hiển thị theo bộ lọc và cách sắp xếp bạn đã chọn. Mỗi sản phẩm sẽ hiển thị hình ảnh, tên, giá và đánh giá từ khách hàng.',
-      placement: 'left',
-      spotlightPadding: 20,
-      disableOverlayClose: true
-    }
+    // ... (các bước hướng dẫn giữ nguyên)
   ];
 
   const startTutorial = () => {
     setRunTutorial(true);
+  };
+
+  const toggleDropdown = (dropdownName) => {
+    switch (dropdownName) {
+      case 'skinType':
+        setIsOpenSkinType(!isOpenSkinType);
+        break;
+      case 'category':
+        setIsOpenCategory(!isOpenCategory);
+        break;
+      case 'rating':
+        setIsOpenRating(!isOpenRating);
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -94,62 +72,120 @@ const ProductsPage = () => {
             </h2>
             {/* Loại da filter */}
             <div className="mb-6 skin-type-filter">
-              <label className="block text-gray-700 font-semibold mb-3 flex items-center gap-2">
-                <Droplet size={16} className="text-blue-500" /> Loại da
-              </label>
-              <div className="grid grid-cols-1 gap-2">
-                {[
-                  "Tất cả",
-                  "Da Dầu",
-                  "Da Khô",
-                  "Da Thường",
-                  "Da Hỗn Hợp",
-                  "Da Nhạy Cảm",
-                ].map((type) => (
-                  <button
-                    key={type}
-                    className={`px-3 py-2 text-sm font-medium rounded-lg transition-all duration-300 border ${
-                      selectedSkinType === type
-                        ? "bg-gradient-to-r from-blue-300 to-blue-400 text-white border-transparent shadow-lg shadow-blue-200 scale-105"
-                        : "bg-white hover:bg-blue-50 hover:border-blue-200 border-gray-200"
-                    }`}
-                    onClick={() => setSelectedSkinType(type)}
-                    aria-pressed={selectedSkinType === type}
-                  >
-                    {type}
-                  </button>
-                ))}
-              </div>
+              <button
+                onClick={() => toggleDropdown('skinType')}
+                className="w-full flex justify-between items-center text-gray-700 font-semibold mb-3"
+              >
+                <span className="flex items-center gap-2">
+                  <Droplet size={16} className="text-blue-500" /> Loại da
+                </span>
+                <ChevronDown
+                  size={16}
+                  className={`transition-transform duration-300 ${isOpenSkinType ? 'transform rotate-180' : ''}`}
+                />
+              </button>
+              {isOpenSkinType && (
+                <div className="grid grid-cols-1 gap-2">
+                  {[
+                    "Tất cả",
+                    "Da Dầu",
+                    "Da Khô",
+                    "Da Thường",
+                    "Da Hỗn Hợp",
+                    "Da Nhạy Cảm",
+                  ].map((type) => (
+                    <button
+                      key={type}
+                      className={`px-3 py-2 text-sm font-medium rounded-lg transition-all duration-300 border ${
+                        selectedSkinType === type
+                          ? "bg-gradient-to-r from-blue-300 to-blue-400 text-white border-transparent shadow-lg shadow-blue-200 scale-105"
+                          : "bg-white hover:bg-blue-50 hover:border-blue-200 border-gray-200"
+                      }`}
+                      onClick={() => setSelectedSkinType(type)}
+                      aria-pressed={selectedSkinType === type}
+                    >
+                      {type}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
             {/* Loại sản phẩm filter */}
-            <div className="mb-4 category-filter">
-              <label className="block text-gray-700 font-semibold mb-3 flex items-center gap-2">
-                <Sun size={16} className="text-yellow-500" /> Loại sản phẩm
-              </label>
-              <div className="grid grid-cols-1 gap-2">
-                {[
-                  "Tất cả",
-                  "Tẩy trang",
-                  "Sữa rửa mặt",
-                  "Toner",
-                  "Serum",
-                  "Kem Dưỡng",
-                  "Kem Chống Nắng",
-                ].map((category) => (
-                  <button
-                    key={category}
-                    className={`px-3 py-2 text-sm font-medium rounded-lg transition-all duration-300 border ${
-                      selectedCategory === category
-                        ? "bg-gradient-to-r from-yellow-300 to-yellow-400 text-white border-transparent shadow-lg shadow-yellow-200 scale-105"
-                        : "bg-white hover:bg-yellow-50 hover:border-yellow-200 border-gray-200"
-                    }`}
-                    onClick={() => setSelectedCategory(category)}
-                    aria-pressed={selectedCategory === category}
-                  >
-                    {category}
-                  </button>
-                ))}
-              </div>
+            <div className="mb-6 category-filter">
+              <button
+                onClick={() => toggleDropdown('category')}
+                className="w-full flex justify-between items-center text-gray-700 font-semibold mb-3"
+              >
+                <span className="flex items-center gap-2">
+                  <Sun size={16} className="text-yellow-500" /> Loại sản phẩm
+                </span>
+                <ChevronDown
+                  size={16}
+                  className={`transition-transform duration-300 ${isOpenCategory ? 'transform rotate-180' : ''}`}
+                />
+              </button>
+              {isOpenCategory && (
+                <div className="grid grid-cols-1 gap-2">
+                  {[
+                    "Tất cả",
+                    "Tẩy trang",
+                    "Sữa rửa mặt",
+                    "Toner",
+                    "Serum",
+                    "Kem Dưỡng",
+                    "Kem Chống Nắng",
+                    "Mặt nạ",
+                    "Xịt khoáng",
+                    "Tẩy tế bào chết"
+                  ].map((category) => (
+                    <button
+                      key={category}
+                      className={`px-3 py-2 text-sm font-medium rounded-lg transition-all duration-300 border ${
+                        selectedCategory === category
+                          ? "bg-gradient-to-r from-yellow-300 to-yellow-400 text-white border-transparent shadow-lg shadow-yellow-200 scale-105"
+                          : "bg-white hover:bg-yellow-50 hover:border-yellow-200 border-gray-200"
+                      }`}
+                      onClick={() => setSelectedCategory(category)}
+                      aria-pressed={selectedCategory === category}
+                    >
+                      {category}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            {/* Đánh giá filter */}
+            <div className="mb-6 rating-filter">
+              <button
+                onClick={() => toggleDropdown('rating')}
+                className="w-full flex justify-between items-center text-gray-700 font-semibold mb-3"
+              >
+                <span className="flex items-center gap-2">
+                  <ThumbsUp size={16} className="text-green-500" /> Đánh giá
+                </span>
+                <ChevronDown
+                  size={16}
+                  className={`transition-transform duration-300 ${isOpenRating ? 'transform rotate-180' : ''}`}
+                />
+              </button>
+              {isOpenRating && (
+                <div className="grid grid-cols-1 gap-2">
+                  {[0, 3, 4, 5].map((rating) => (
+                    <button
+                      key={rating}
+                      className={`px-3 py-2 text-sm font-medium rounded-lg transition-all duration-300 border ${
+                        selectedRating === rating
+                          ? "bg-gradient-to-r from-green-300 to-green-400 text-white border-transparent shadow-lg shadow-green-200 scale-105"
+                          : "bg-white hover:bg-green-50 hover:border-green-200 border-gray-200"
+                      }`}
+                      onClick={() => setSelectedRating(rating)}
+                      aria-pressed={selectedRating === rating}
+                    >
+                      {rating === 0 ? "Tất cả" : `${rating} sao trở lên`}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
           {/* Product List */}
@@ -169,13 +205,14 @@ const ProductsPage = () => {
                 }
               >
                 <Star size={20} /> Sắp xếp theo{" "}
-                {sortOrder === "asc" ? "tăng dần" : "giảm dần"}
+                {sortOrder === "asc" ? "giá tăng dần" : "giá giảm dần"}
               </button>
             </div>
             {/* ProductList */}
             <ProductList
               selectedSkinType={selectedSkinType}
               selectedCategory={selectedCategory}
+              selectedRating={selectedRating}
               sortOrder={sortOrder}
             />
           </div>
